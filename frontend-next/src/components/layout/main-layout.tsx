@@ -10,8 +10,7 @@ import {
   UserPlus,
   FilePlus,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const navigation = [
   {
@@ -94,6 +93,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <main className="flex-1">
+        {/* Header with theme toggle */}
+        <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container mx-auto flex h-14 items-center justify-between px-6">
+            <h1 className="text-lg font-semibold">Anesthesia Management</h1>
+            <ThemeToggle />
+          </div>
+        </div>
         <div className="container mx-auto p-6">{children}</div>
       </main>
     </div>
