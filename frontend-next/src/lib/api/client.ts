@@ -29,10 +29,20 @@ apiClient.interceptors.response.use(
     // Handle errors globally
     if (error.response) {
       // Server responded with error status
-      console.error('API Error:', error.response.data);
+      console.error('API Error:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data,
+        url: error.config?.url,
+        method: error.config?.method,
+      });
     } else if (error.request) {
       // Request made but no response
-      console.error('Network Error:', error.message);
+      console.error('Network Error:', {
+        message: error.message,
+        url: error.config?.url,
+        method: error.config?.method,
+      });
     } else {
       // Something else happened
       console.error('Error:', error.message);
