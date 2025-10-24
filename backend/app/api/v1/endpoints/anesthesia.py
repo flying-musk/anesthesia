@@ -1,5 +1,5 @@
 """
-麻醉須知相關 API 端點
+Anesthesia guidelines-related API endpoints
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
@@ -16,23 +16,25 @@ from app.schemas.anesthesia import (
     AnesthesiaGuidelineTemplateResponse, GenerateGuidelineRequest,
     AnesthesiaGuidelineWithPatient
 )
+from app.schemas.patient import PaginatedResponse
 from app.services.anesthesia_service import AnesthesiaGuidelineService
+from math import ceil
 
 router = APIRouter()
 
 
 @router.post("/guidelines/generate", response_model=AnesthesiaGuidelineResponse, status_code=status.HTTP_201_CREATED)
 async def generate_guideline(request: GenerateGuidelineRequest, db: Session = Depends(get_db)):
-    """生成麻醉須知"""
-    # 檢查患者是否存在
+    """Generate anesthesia guideline"""
+    # Check if patient exists
     print("enter generate_guideline", request.patient_id)
     patient = db.query(Patient).filter(Patient.id == request.patient_id).first()
     if not patient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="患者不存在"
+            detail="Patient not found"
         )
-    
+
     try:
         service = AnesthesiaGuidelineService()
         guideline = await service.generate_guideline(db, request)
@@ -40,52 +42,69 @@ async def generate_guideline(request: GenerateGuidelineRequest, db: Session = De
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"生成麻醉須知失敗: {str(e)}"
+            detail=f"Failed to generate anesthesia guideline: {str(e)}"
         )
 
 
-@router.get("/guidelines", response_model=List[AnesthesiaGuidelineResponse])
+@router.get("/guidelines", response_model=PaginatedResponse[AnesthesiaGuidelineResponse])
 async def get_guidelines(
-    skip: int = 0, 
-    limit: int = 100, 
+    page: int = 1,
+    size: int = 100,
     db: Session = Depends(get_db)
 ):
-    """獲取所有麻醉須知"""
-    guidelines = db.query(AnesthesiaGuideline).offset(skip).limit(limit).all()
-    return guidelines
+    """Get all anesthesia guidelines with pagination"""
+    # Calculate offset
+    skip = (page - 1) * size
+
+    # Get total count
+    total = db.query(AnesthesiaGuideline).count()
+
+    # Get guidelines for current page
+    guidelines = db.query(AnesthesiaGuideline).offset(skip).limit(size).all()
+
+    # Calculate total pages
+    pages = ceil(total / size) if size > 0 else 0
+
+    return PaginatedResponse(
+        items=guidelines,
+        total=total,
+        page=page,
+        size=size,
+        pages=pages
+    )
 
 
 @router.get("/guidelines/{guideline_id}", response_model=AnesthesiaGuidelineResponse)
 async def get_guideline(guideline_id: int, db: Session = Depends(get_db)):
-    """獲取特定麻醉須知"""
+    """Get specific anesthesia guideline"""
     guideline = db.query(AnesthesiaGuideline).filter(
         AnesthesiaGuideline.id == guideline_id
     ).first()
-    
+
     if not guideline:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="麻醉須知不存在"
+            detail="Anesthesia guideline not found"
         )
-    
+
     return guideline
 
 
 @router.put("/guidelines/{guideline_id}", response_model=AnesthesiaGuidelineResponse)
 async def update_guideline(
-    guideline_id: int, 
-    guideline_update: AnesthesiaGuidelineUpdate, 
+    guideline_id: int,
+    guideline_update: AnesthesiaGuidelineUpdate,
     db: Session = Depends(get_db)
 ):
-    """更新麻醉須知"""
+    """Update anesthesia guideline"""
     guideline = db.query(AnesthesiaGuideline).filter(
         AnesthesiaGuideline.id == guideline_id
     ).first()
-    
+
     if not guideline:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="麻醉須知不存在"
+            detail="Anesthesia guideline not found"
         )
     
     update_data = guideline_update.dict(exclude_unset=True)
@@ -100,15 +119,15 @@ async def update_guideline(
 
 @router.delete("/guidelines/{guideline_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_guideline(guideline_id: int, db: Session = Depends(get_db)):
-    """刪除麻醉須知"""
+    """Delete anesthesia guideline"""
     guideline = db.query(AnesthesiaGuideline).filter(
         AnesthesiaGuideline.id == guideline_id
     ).first()
-    
+
     if not guideline:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="麻醉須知不存在"
+            detail="Anesthesia guideline not found"
         )
     
     db.delete(guideline)
@@ -117,13 +136,13 @@ async def delete_guideline(guideline_id: int, db: Session = Depends(get_db)):
 
 @router.get("/guidelines/patient/{patient_id}", response_model=List[AnesthesiaGuidelineResponse])
 async def get_patient_guidelines(patient_id: int, db: Session = Depends(get_db)):
-    """獲取特定患者的所有麻醉須知"""
-    # 檢查患者是否存在
+    """Get all anesthesia guidelines for a specific patient"""
+    # Check if patient exists
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="患者不存在"
+            detail="Patient not found"
         )
     
     guidelines = db.query(AnesthesiaGuideline).filter(
@@ -135,76 +154,76 @@ async def get_patient_guidelines(patient_id: int, db: Session = Depends(get_db))
 
 @router.get("/guidelines/by-date", response_model=List[AnesthesiaGuidelineResponse])
 async def get_guidelines_by_date(
-    surgery_date: date = Query(..., description="手術日期"),
+    surgery_date: date = Query(..., description="Surgery date"),
     db: Session = Depends(get_db)
 ):
-    """根據手術日期查詢麻醉須知"""
+    """Get anesthesia guidelines by surgery date"""
     guidelines = db.query(AnesthesiaGuideline).filter(
         AnesthesiaGuideline.surgery_date == surgery_date
     ).all()
-    
+
     return guidelines
 
 
 @router.get("/templates", response_model=List[AnesthesiaGuidelineTemplateResponse])
 async def get_templates(
-    skip: int = 0, 
-    limit: int = 100, 
+    skip: int = 0,
+    limit: int = 100,
     db: Session = Depends(get_db)
 ):
-    """獲取所有麻醉須知模板"""
+    """Get all anesthesia guideline templates"""
     templates = db.query(AnesthesiaGuidelineTemplate).filter(
         AnesthesiaGuidelineTemplate.is_active == True
     ).offset(skip).limit(limit).all()
-    
+
     return templates
 
 
 @router.get("/templates/{template_id}", response_model=AnesthesiaGuidelineTemplateResponse)
 async def get_template(template_id: int, db: Session = Depends(get_db)):
-    """獲取特定麻醉須知模板"""
+    """Get specific anesthesia guideline template"""
     template = db.query(AnesthesiaGuidelineTemplate).filter(
         AnesthesiaGuidelineTemplate.id == template_id
     ).first()
-    
+
     if not template:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="模板不存在"
+            detail="Template not found"
         )
-    
+
     return template
 
 
 @router.post("/templates", response_model=AnesthesiaGuidelineTemplateResponse, status_code=status.HTTP_201_CREATED)
 async def create_template(
-    template: AnesthesiaGuidelineTemplateCreate, 
+    template: AnesthesiaGuidelineTemplateCreate,
     db: Session = Depends(get_db)
 ):
-    """建立麻醉須知模板"""
+    """Create anesthesia guideline template"""
     db_template = AnesthesiaGuidelineTemplate(**template.dict())
     db.add(db_template)
     db.commit()
     db.refresh(db_template)
-    
+
     return db_template
 
 
 @router.put("/templates/{template_id}", response_model=AnesthesiaGuidelineTemplateResponse)
 async def update_template(
-    template_id: int, 
-    template_update: AnesthesiaGuidelineTemplateUpdate, 
+    template_id: int,
+    template_update: AnesthesiaGuidelineTemplateUpdate,
     db: Session = Depends(get_db)
 ):
-    """更新麻醉須知模板"""
+    """Update anesthesia guideline template"""
     template = db.query(AnesthesiaGuidelineTemplate).filter(
         AnesthesiaGuidelineTemplate.id == template_id
     ).first()
-    
+
     if not template:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="模板不存在"
+            detail="Template not found"
         )
     
     update_data = template_update.dict(exclude_unset=True)
@@ -219,15 +238,15 @@ async def update_template(
 
 @router.delete("/templates/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_template(template_id: int, db: Session = Depends(get_db)):
-    """刪除麻醉須知模板"""
+    """Delete anesthesia guideline template"""
     template = db.query(AnesthesiaGuidelineTemplate).filter(
         AnesthesiaGuidelineTemplate.id == template_id
     ).first()
-    
+
     if not template:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="模板不存在"
+            detail="Template not found"
         )
     
     db.delete(template)
@@ -236,13 +255,13 @@ async def delete_template(template_id: int, db: Session = Depends(get_db)):
 
 @router.get("/templates/by-type", response_model=List[AnesthesiaGuidelineTemplateResponse])
 async def get_templates_by_type(
-    anesthesia_type: str = Query(..., description="麻醉類型"),
+    anesthesia_type: str = Query(..., description="Anesthesia type"),
     db: Session = Depends(get_db)
 ):
-    """根據麻醉類型獲取模板"""
+    """Get templates by anesthesia type"""
     templates = db.query(AnesthesiaGuidelineTemplate).filter(
         AnesthesiaGuidelineTemplate.anesthesia_type == anesthesia_type,
         AnesthesiaGuidelineTemplate.is_active == True
     ).all()
-    
+
     return templates

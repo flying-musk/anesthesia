@@ -74,7 +74,12 @@ export default function GenerateGuidelinePage() {
 
   const onSubmit = async (data: GuidelineGenerateFormData) => {
     try {
-      const guideline = await generateGuideline.mutateAsync(data);
+      // Backend expects anesthesia_type field (same as surgery_type)
+      const requestData = {
+        ...data,
+        anesthesia_type: data.surgery_type,
+      };
+      const guideline = await generateGuideline.mutateAsync(requestData);
       router.push(`/guidelines/${guideline.id}`);
     } catch (error) {
       console.error('Error generating guideline:', error);
