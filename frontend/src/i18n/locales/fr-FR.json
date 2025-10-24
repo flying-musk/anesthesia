@@ -1,0 +1,123 @@
+{
+  "app": {
+    "title": "Système de Génération de Consignes d'Anesthésie",
+    "subtitle": "Système de Génération de Consignes d'Anesthésie Personnalisées basé sur l'IA",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "success": "Opération réussie",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "search": "Rechercher",
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "patients": "Gestion des Patients",
+    "guidelines": "Consignes d'Anesthésie",
+    "templates": "Gestion des Modèles",
+    "settings": "Paramètres",
+    "language": "Langue"
+  },
+  "patient": {
+    "title": "Gestion des Patients",
+    "createPatient": "Créer un Patient",
+    "searchPatient": "Rechercher un Patient",
+    "patientList": "Liste des Patients",
+    "patientDetails": "Détails du Patient",
+    "personalInfo": "Informations Personnelles",
+    "medicalHistory": "Antécédents Médicaux",
+    "surgeryRecords": "Dossiers Chirurgicaux",
+    "fields": {
+      "healthInsuranceNumber": "Numéro d'Assurance Maladie",
+      "fullName": "Nom Complet",
+      "dateOfBirth": "Date de Naissance",
+      "gender": "Sexe",
+      "phoneNumber": "Numéro de Téléphone",
+      "emergencyContactName": "Nom du Contact d'Urgence",
+      "emergencyContactRelationship": "Relation du Contact d'Urgence",
+      "emergencyContactPhone": "Téléphone du Contact d'Urgence"
+    },
+    "genders": {
+      "M": "Masculin",
+      "F": "Féminin",
+      "O": "Autre"
+    },
+    "medicalHistoryFields": {
+      "allergies": "Allergies",
+      "chronicConditions": "Affections Chroniques",
+      "currentMedications": "Médicaments Actuels",
+      "previousSurgeries": "Chirurgies Précédentes",
+      "familyHistory": "Antécédents Familiaux",
+      "otherMedicalInfo": "Autres Informations Médicales"
+    }
+  },
+  "anesthesia": {
+    "title": "Consignes d'Anesthésie",
+    "generateGuideline": "Générer des Consignes d'Anesthésie",
+    "guidelineList": "Liste des Consignes",
+    "guidelineDetails": "Détails des Consignes",
+    "fields": {
+      "patientId": "ID du Patient",
+      "surgeryName": "Nom de la Chirurgie",
+      "anesthesiaType": "Type d'Anesthésie",
+      "surgeryDate": "Date de la Chirurgie",
+      "surgeonName": "Nom du Chirurgien",
+      "anesthesiologistName": "Nom de l'Anesthésiste"
+    },
+    "types": {
+      "general": "Anesthésie Générale",
+      "local": "Anesthésie Locale",
+      "regional": "Anesthésie Régionale",
+      "sedation": "Sédation"
+    },
+    "content": {
+      "anesthesiaTypeInfo": "Informations sur le Type d'Anesthésie",
+      "surgeryProcess": "Processus Chirurgical",
+      "expectedSensations": "Sensations Attendues",
+      "potentialRisks": "Risques Potentiels",
+      "preSurgeryInstructions": "Instructions Pré-opératoires",
+      "fastingInstructions": "Instructions de Jeûne",
+      "medicationInstructions": "Instructions sur les Médicaments",
+      "commonQuestions": "Questions Fréquentes",
+      "postSurgeryCare": "Soins Post-opératoires"
+    }
+  },
+  "forms": {
+    "required": "Ce champ est obligatoire",
+    "invalidEmail": "Veuillez saisir un email valide",
+    "invalidPhone": "Veuillez saisir un numéro de téléphone valide",
+    "invalidDate": "Veuillez saisir une date valide",
+    "minLength": "Minimum {{min}} caractères requis",
+    "maxLength": "Maximum {{max}} caractères autorisés"
+  },
+  "messages": {
+    "patientCreated": "Patient créé avec succès",
+    "patientUpdated": "Informations du patient mises à jour",
+    "patientDeleted": "Patient supprimé",
+    "guidelineGenerated": "Consignes d'anesthésie générées avec succès",
+    "guidelineUpdated": "Consignes d'anesthésie mises à jour",
+    "guidelineDeleted": "Consignes d'anesthésie supprimées",
+    "searchSuccess": "Recherche réussie",
+    "noResults": "Aucun résultat trouvé",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
+    "deleteSuccess": "Supprimé avec succès",
+    "saveSuccess": "Enregistré avec succès",
+    "updateSuccess": "Mis à jour avec succès"
+  },
+  "errors": {
+    "networkError": "Erreur de connexion réseau",
+    "serverError": "Erreur serveur",
+    "notFound": "Ressource non trouvée",
+    "unauthorized": "Non autorisé",
+    "forbidden": "Accès interdit",
+    "validationError": "Erreur de validation",
+    "unknownError": "Erreur inconnue"
+  }
+}
