@@ -45,7 +45,7 @@ export default function GenerateGuidelinePage() {
   });
 
   const formData = watch();
-  const selectedPatient = patientsData?.items.find(
+  const selectedPatient = patientsData?.items?.find(
     (p) => p.id === formData.patient_id
   );
 
@@ -152,7 +152,7 @@ export default function GenerateGuidelinePage() {
                       <SelectValue placeholder="Choose a patient" />
                     </SelectTrigger>
                     <SelectContent>
-                      {patientsData?.items.map((patient) => (
+                      {patientsData?.items?.map((patient) => (
                         <SelectItem key={patient.id} value={patient.id.toString()}>
                           {patient.full_name} - {patient.health_insurance_number}
                         </SelectItem>

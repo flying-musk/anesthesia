@@ -15,7 +15,7 @@ export default function GuidelinesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const { data, isLoading } = useGuidelines();
 
-  const filteredGuidelines = data?.items.filter(
+  const filteredGuidelines = data?.items?.filter(
     (guideline) =>
       guideline.surgery_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       guideline.anesthesia_type.toLowerCase().includes(searchTerm.toLowerCase())
