@@ -16,12 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
+import axios from 'axios';
 
 export default function CreatePatientPage() {
   const router = useRouter();
   const createPatient = useCreatePatient();
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const {
     register,
@@ -37,11 +40,29 @@ export default function CreatePatientPage() {
 
   const onSubmit = async (data: PatientFormData) => {
     try {
-      const patient = await createPatient.mutateAsync(data);
+      setApiError(null);
+
+      // Remove empty strings and convert them to undefined
+      const cleanedData = Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [
+          key,
+          value === '' ? undefined : value,
+        ])
+      ) as PatientFormData;
+
+      console.log('Submitting patient data:', cleanedData);
+      const patient = await createPatient.mutateAsync(cleanedData);
       router.push(`/patients/${patient.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating patient:', error);
-      alert('Failed to create patient. Please try again.');
+      console.error('Error response data:', error.response?.data);
+
+      // Extract error message from API response
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        setApiError(error.response.data.detail);
+      } else {
+        setApiError('Failed to create patient. Please try again.');
+      }
     }
   };
 
@@ -65,6 +86,13 @@ export default function CreatePatientPage() {
             <CardTitle>Patient Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            {apiError && (
+              <div className="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                <p>{apiError}</p>
+              </div>
+            )}
+
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="health_insurance_number">
@@ -108,7 +136,7 @@ export default function CreatePatientPage() {
               <div className="space-y-2">
                 <Label htmlFor="gender">Gender *</Label>
                 <Select
-                  value={selectedGender}
+                  value={selectedGender || ''}
                   onValueChange={(value) =>
                     setValue('gender', value as 'M' | 'F' | 'O')
                   }
@@ -128,7 +156,7 @@ export default function CreatePatientPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone_number">Phone Number *</Label>
+                <Label htmlFor="phone_number">Phone Number</Label>
                 <Input id="phone_number" {...register('phone_number')} />
                 {errors.phone_number && (
                   <p className="text-sm text-red-500">

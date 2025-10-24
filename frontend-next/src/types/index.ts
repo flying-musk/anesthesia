@@ -5,7 +5,7 @@ export interface Patient {
   full_name: string;
   date_of_birth: string;
   gender: 'M' | 'F' | 'O';
-  phone_number: string;
+  phone_number?: string;
   emergency_contact_name?: string;
   emergency_contact_relationship?: string;
   emergency_contact_phone?: string;
@@ -96,7 +96,7 @@ export interface PatientCreate {
   full_name: string;
   date_of_birth: string;
   gender: 'M' | 'F' | 'O';
-  phone_number: string;
+  phone_number?: string;
   emergency_contact_name?: string;
   emergency_contact_relationship?: string;
   emergency_contact_phone?: string;
@@ -128,6 +128,7 @@ export interface GuidelineGenerateRequest {
   patient_id: number;
   surgery_name: string;
   surgery_type: 'general' | 'local' | 'regional' | 'sedation';
+  anesthesia_type: 'general' | 'local' | 'regional' | 'sedation';
   surgery_date: string;
   surgeon_name: string;
   anesthesiologist_name: string;

@@ -64,7 +64,17 @@ export const useDeletePatient = () => {
 export const useMedicalHistory = (patientId: number) => {
   return useQuery({
     queryKey: QUERY_KEYS.medicalHistory.byPatient(patientId),
-    queryFn: () => patientsApi.getMedicalHistory(patientId),
+    queryFn: async () => {
+      try {
+        return await patientsApi.getMedicalHistory(patientId);
+      } catch (error: any) {
+        // If medical history doesn't exist (404), return null instead of throwing
+        if (error.response?.status === 404) {
+          return null;
+        }
+        throw error;
+      }
+    },
     enabled: !!patientId,
   });
 };
@@ -117,7 +127,17 @@ export const useUpdateMedicalHistory = () => {
 export const useSurgeryRecords = (patientId: number) => {
   return useQuery({
     queryKey: QUERY_KEYS.surgeryRecords.byPatient(patientId),
-    queryFn: () => patientsApi.getSurgeryRecords(patientId),
+    queryFn: async () => {
+      try {
+        return await patientsApi.getSurgeryRecords(patientId);
+      } catch (error: any) {
+        // If no surgery records exist (404), return empty array instead of throwing
+        if (error.response?.status === 404) {
+          return [];
+        }
+        throw error;
+      }
+    },
     enabled: !!patientId,
   });
 };
