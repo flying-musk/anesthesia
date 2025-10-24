@@ -1,5 +1,5 @@
 """
-患者相關 Pydantic 模型
+Pydantic models for patients.
 """
 
 from pydantic import BaseModel, Field, validator
@@ -9,37 +9,37 @@ from enum import Enum
 
 
 class GenderEnum(str, Enum):
-    """性別枚舉"""
+    """Gender enumeration."""
     MALE = "M"
     FEMALE = "F"
     OTHER = "O"
 
 
 class PatientBase(BaseModel):
-    """患者基礎模型"""
-    health_insurance_number: str = Field(..., min_length=10, max_length=10, description="健保號")
-    full_name: str = Field(..., min_length=1, max_length=100, description="全名")
-    date_of_birth: date = Field(..., description="生日")
-    gender: GenderEnum = Field(..., description="性別")
-    phone_number: Optional[str] = Field(None, max_length=15, description="電話號碼")
-    emergency_contact_name: Optional[str] = Field(None, max_length=100, description="緊急聯絡人姓名")
-    emergency_contact_relationship: Optional[str] = Field(None, max_length=50, description="關係")
-    emergency_contact_phone: Optional[str] = Field(None, max_length=15, description="緊急聯絡人電話")
+    """Base model for a patient."""
+    health_insurance_number: str = Field(..., min_length=10, max_length=10, description="Health Insurance Number")
+    full_name: str = Field(..., min_length=1, max_length=100, description="Full Name")
+    date_of_birth: date = Field(..., description="Date of Birth")
+    gender: GenderEnum = Field(..., description="Gender")
+    phone_number: Optional[str] = Field(None, max_length=15, description="Phone Number")
+    emergency_contact_name: Optional[str] = Field(None, max_length=100, description="Emergency Contact Name")
+    emergency_contact_relationship: Optional[str] = Field(None, max_length=50, description="Relationship")
+    emergency_contact_phone: Optional[str] = Field(None, max_length=15, description="Emergency Contact Phone")
     
     @validator('health_insurance_number')
     def validate_health_insurance_number(cls, v):
         if not v.isdigit():
-            raise ValueError('健保號必須是數字')
+            raise ValueError('Health insurance number must be numeric')
         return v
 
 
 class PatientCreate(PatientBase):
-    """建立患者模型"""
+    """Model for creating a patient."""
     pass
 
 
 class PatientUpdate(BaseModel):
-    """更新患者模型"""
+    """Model for updating a patient."""
     full_name: Optional[str] = Field(None, min_length=1, max_length=100)
     phone_number: Optional[str] = Field(None, max_length=15)
     emergency_contact_name: Optional[str] = Field(None, max_length=100)
@@ -48,7 +48,7 @@ class PatientUpdate(BaseModel):
 
 
 class PatientResponse(PatientBase):
-    """患者回應模型"""
+    """Response model for a patient."""
     id: int
     created_at: datetime
     updated_at: datetime
@@ -58,27 +58,27 @@ class PatientResponse(PatientBase):
 
 
 class MedicalHistoryBase(BaseModel):
-    """醫療病史基礎模型"""
-    allergies: Optional[str] = Field(None, description="過敏史")
-    chronic_conditions: Optional[str] = Field(None, description="慢性疾病")
-    current_medications: Optional[str] = Field(None, description="目前用藥")
-    previous_surgeries: Optional[str] = Field(None, description="手術史")
-    family_history: Optional[str] = Field(None, description="家族病史")
-    other_medical_info: Optional[str] = Field(None, description="其他醫療資訊")
+    """Base model for medical history."""
+    allergies: Optional[str] = Field(None, description="Allergies")
+    chronic_conditions: Optional[str] = Field(None, description="Chronic Conditions")
+    current_medications: Optional[str] = Field(None, description="Current Medications")
+    previous_surgeries: Optional[str] = Field(None, description="Previous Surgeries")
+    family_history: Optional[str] = Field(None, description="Family History")
+    other_medical_info: Optional[str] = Field(None, description="Other Medical Information")
 
 
 class MedicalHistoryCreate(MedicalHistoryBase):
-    """建立醫療病史模型"""
+    """Model for creating medical history."""
     patient_id: int
 
 
 class MedicalHistoryUpdate(MedicalHistoryBase):
-    """更新醫療病史模型"""
+    """Model for updating medical history."""
     pass
 
 
 class MedicalHistoryResponse(MedicalHistoryBase):
-    """醫療病史回應模型"""
+    """Response model for medical history."""
     id: int
     patient_id: int
     created_at: datetime
@@ -89,26 +89,26 @@ class MedicalHistoryResponse(MedicalHistoryBase):
 
 
 class SurgeryRecordBase(BaseModel):
-    """手術記錄基礎模型"""
-    surgery_name: str = Field(..., max_length=200, description="手術名稱")
-    surgery_type: str = Field(..., max_length=20, description="麻醉類型")
-    surgery_date: date = Field(..., description="手術日期")
-    surgeon_name: str = Field(..., max_length=100, description="主刀醫師")
-    anesthesiologist_name: str = Field(..., max_length=100, description="麻醉醫師")
-    surgery_duration: Optional[int] = Field(None, description="手術時間（分鐘）")
-    anesthesia_duration: Optional[int] = Field(None, description="麻醉時間（分鐘）")
-    pre_surgery_assessment: Optional[str] = Field(None, description="術前評估")
-    post_surgery_notes: Optional[str] = Field(None, description="術後記錄")
-    complications: Optional[str] = Field(None, description="併發症")
+    """Base model for a surgery record."""
+    surgery_name: str = Field(..., max_length=200, description="Surgery Name")
+    surgery_type: str = Field(..., max_length=20, description="Anesthesia Type")
+    surgery_date: date = Field(..., description="Surgery Date")
+    surgeon_name: str = Field(..., max_length=100, description="Surgeon Name")
+    anesthesiologist_name: str = Field(..., max_length=100, description="Anesthesiologist Name")
+    surgery_duration: Optional[int] = Field(None, description="Surgery Duration (minutes)")
+    anesthesia_duration: Optional[int] = Field(None, description="Anesthesia Duration (minutes)")
+    pre_surgery_assessment: Optional[str] = Field(None, description="Pre-Surgery Assessment")
+    post_surgery_notes: Optional[str] = Field(None, description="Post-Surgery Notes")
+    complications: Optional[str] = Field(None, description="Complications")
 
 
 class SurgeryRecordCreate(SurgeryRecordBase):
-    """建立手術記錄模型"""
+    """Model for creating a surgery record."""
     patient_id: int
 
 
 class SurgeryRecordUpdate(BaseModel):
-    """更新手術記錄模型"""
+    """Model for updating a surgery record."""
     surgery_name: Optional[str] = Field(None, max_length=200)
     surgery_type: Optional[str] = Field(None, max_length=20)
     surgery_date: Optional[date] = None
@@ -122,7 +122,7 @@ class SurgeryRecordUpdate(BaseModel):
 
 
 class SurgeryRecordResponse(SurgeryRecordBase):
-    """手術記錄回應模型"""
+    """Response model for a surgery record."""
     id: int
     patient_id: int
     created_at: datetime
@@ -133,7 +133,7 @@ class SurgeryRecordResponse(SurgeryRecordBase):
 
 
 class PatientSearchRequest(BaseModel):
-    """患者搜尋請求模型"""
+    """Request model for searching a patient."""
     health_insurance_number: str = Field(..., min_length=10, max_length=10)
     full_name: str = Field(..., min_length=1, max_length=100)
     date_of_birth: date
@@ -141,11 +141,11 @@ class PatientSearchRequest(BaseModel):
     @validator('health_insurance_number')
     def validate_health_insurance_number(cls, v):
         if not v.isdigit():
-            raise ValueError('健保號必須是數字')
+            raise ValueError('Health insurance number must be numeric')
         return v
 
 
 class PatientDetailResponse(PatientResponse):
-    """患者詳細回應模型（包含醫療病史和手術記錄）"""
+    """Detailed response model for a patient, including medical history and surgery records."""
     medical_history: Optional[MedicalHistoryResponse] = None
     surgery_records: List[SurgeryRecordResponse] = []
