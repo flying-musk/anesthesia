@@ -1,33 +1,33 @@
-# 🏥 麻醉前須知生成系統
+# 🏥 AI-Powered Anesthesia Guidelines Generation System
 
-基於AI的個人化麻醉前須知生成系統，支援多語言界面（中文、英文、法文）。
+An AI-based personalized anesthesia guidelines generation system with multi-language support (Chinese, English, French).
 
-## 📁 專案結構
+## 📁 Project Structure
 
 ```
-anesthesia-backend/
-├── frontend/                 # React前端應用
-│   ├── public/              # 靜態資源
+anesthesia/
+├── frontend/                 # React frontend application
+│   ├── public/              # Static assets
 │   ├── src/
-│   │   ├── components/      # React組件
-│   │   ├── pages/           # 頁面組件
-│   │   ├── services/        # API服務
-│   │   ├── i18n/           # 國際化配置
+│   │   ├── components/      # React components
+│   │   ├── pages/           # Page components
+│   │   ├── services/        # API services
+│   │   ├── i18n/           # Internationalization config
 │   │   └── ...
 │   ├── package.json
 │   └── ...
-├── backend/                 # FastAPI後端
-│   ├── app/                # 應用程式代碼
-│   ├── scripts/            # 腳本文件
+├── backend/                 # FastAPI backend
+│   ├── app/                # Application code
+│   ├── scripts/            # Script files
 │   ├── requirements.txt
 │   └── ...
 ├── README.md
 └── ...
 ```
 
-## 🚀 快速開始
+## 🚀 Quick Start
 
-### 1. 啟動後端服務
+### 1. Start Backend Service
 
 ```bash
 cd backend
@@ -36,7 +36,7 @@ python start_demo.py
 uvicorn app.main:app --reload
 ```
 
-### 2. 啟動前端服務
+### 2. Start Frontend Service
 
 ```bash
 cd frontend
@@ -44,130 +44,130 @@ npm install
 npm start
 ```
 
-### 3. 訪問系統
+### 3. Access the System
 
-- **前端界面**: http://localhost:3000
-- **API文檔**: http://localhost:8000/docs
-- **健康檢查**: http://localhost:8000/health
+- **Frontend Interface**: http://localhost:3000
+- **API Documentation**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
 
-## 🌍 多語言支援
+## 🌍 Multi-Language Support
 
-系統支援三種語言：
+The system supports three languages:
 - 🇹🇼 繁體中文 (zh-TW)
 - 🇺🇸 English (en-US)
 - 🇫🇷 Français (fr-FR)
 
-用戶可以在界面右上角切換語言。
+Users can switch languages using the language selector in the top-right corner.
 
-## 🎯 主要功能
+## 🎯 Key Features
 
-### 前端功能
-- ✅ 多語言界面支援
-- ✅ 患者管理（新增、搜尋、查看、編輯）
-- ✅ 麻醉須知生成
-- ✅ 響應式設計
-- ✅ 現代化UI界面
+### Frontend Features
+- ✅ Multi-language interface support
+- ✅ Patient management (create, search, view, edit)
+- ✅ Anesthesia guidelines generation
+- ✅ Responsive design
+- ✅ Modern UI interface
 
-### 後端功能
+### Backend Features
 - ✅ RESTful API
-- ✅ 患者管理系統
-- ✅ 醫療病史管理
-- ✅ AI麻醉須知生成
-- ✅ 本地LLM支援 (Ollama)
-- ✅ OpenAI API整合
+- ✅ Patient management system
+- ✅ Medical history management
+- ✅ AI anesthesia guidelines generation
+- ✅ Local LLM support (Ollama)
+- ✅ OpenAI API integration
 
-## 🛠️ 技術棧
+## 🛠️ Tech Stack
 
-### 前端
+### Frontend
 - React 18
 - Material-UI (MUI)
 - React Router
 - React Query
 - React Hook Form
-- i18next (國際化)
+- i18next (Internationalization)
 - Axios
 
-### 後端
+### Backend
 - FastAPI
 - SQLAlchemy
 - SQLite
 - OpenAI API
-- Ollama (本地LLM)
+- Ollama (Local LLM)
 - Pydantic
 
-## 📋 API端點
+## 📋 API Endpoints
 
-### 患者管理
-- `GET /api/v1/patients/` - 獲取所有患者
-- `POST /api/v1/patients/` - 創建患者
-- `GET /api/v1/patients/{id}` - 獲取患者詳情
-- `PUT /api/v1/patients/{id}` - 更新患者
-- `DELETE /api/v1/patients/{id}` - 刪除患者
-- `POST /api/v1/patients/search` - 搜尋患者
+### Patient Management
+- `GET /api/v1/patients/` - Get all patients
+- `POST /api/v1/patients/` - Create patient
+- `GET /api/v1/patients/{id}` - Get patient details
+- `PUT /api/v1/patients/{id}` - Update patient
+- `DELETE /api/v1/patients/{id}` - Delete patient
+- `POST /api/v1/patients/search` - Search patients
 
-### 麻醉須知
-- `POST /api/v1/anesthesia/guidelines/generate` - 生成麻醉須知
-- `GET /api/v1/anesthesia/guidelines/` - 獲取所有麻醉須知
-- `GET /api/v1/anesthesia/guidelines/{id}` - 獲取麻醉須知詳情
-- `PUT /api/v1/anesthesia/guidelines/{id}` - 更新麻醉須知
-- `DELETE /api/v1/anesthesia/guidelines/{id}` - 刪除麻醉須知
+### Anesthesia Guidelines
+- `POST /api/v1/anesthesia/guidelines/generate` - Generate anesthesia guidelines
+- `GET /api/v1/anesthesia/guidelines/` - Get all anesthesia guidelines
+- `GET /api/v1/anesthesia/guidelines/{id}` - Get anesthesia guideline details
+- `PUT /api/v1/anesthesia/guidelines/{id}` - Update anesthesia guideline
+- `DELETE /api/v1/anesthesia/guidelines/{id}` - Delete anesthesia guideline
 
-## 🔧 配置
+## 🔧 Configuration
 
-### 環境變數
+### Environment Variables
 
-創建 `.env` 文件：
+Create a `.env` file:
 
 ```bash
-# 使用本地LLM (Ollama)
+# Use local LLM (Ollama)
 USE_LOCAL_LLM=true
 OLLAMA_URL=http://localhost:11434
 OLLAMA_MODEL=qwen2.5:7b
 
-# 或使用OpenAI
+# Or use OpenAI
 OPENAI_API_KEY=your_api_key_here
 USE_LOCAL_LLM=false
 
-# 其他設定
+# Other settings
 DEBUG=true
 DATABASE_URL=sqlite:///./anesthesia.db
 ```
 
-### 本地LLM設定
+### Local LLM Setup
 
-1. 安裝Ollama
-2. 下載模型：`ollama pull qwen2.5:7b`
-3. 啟動服務：`ollama serve`
-4. 設定環境變數：`USE_LOCAL_LLM=true`
+1. Install Ollama
+2. Download model: `ollama pull qwen2.5:7b`
+3. Start service: `ollama serve`
+4. Set environment variable: `USE_LOCAL_LLM=true`
 
-## 🧪 測試
+## 🧪 Testing
 
-### 後端測試
+### Backend Testing
 ```bash
 cd backend
 python scripts/test_api.py
 ```
 
-### 前端測試
+### Frontend Testing
 ```bash
 cd frontend
 npm test
 ```
 
-## 📚 文檔
+## 📚 Documentation
 
-- [快速開始指南](backend/QUICK_START.md)
-- [本地LLM設定指南](backend/LOCAL_LLM_GUIDE.md)
-- [API文檔](http://localhost:8000/docs)
+- [Quick Start Guide](QUICK_START.md)
+- [Local LLM Setup Guide](LOCAL_LLM_GUIDE.md)
+- [API Documentation](http://localhost:8000/docs)
 
-## 🤝 貢獻
+## 🤝 Contributing
 
-歡迎提交Issue和Pull Request！
+Issues and Pull Requests are welcome!
 
-## 📄 授權
+## 📄 License
 
 MIT License
 
 ---
 
-🎉 **系統已準備就緒！** 現在你可以開始使用這個強大的麻醉前須知生成系統了！
+🎉 **System Ready!** You can now start using this powerful AI-powered anesthesia guidelines generation system!
