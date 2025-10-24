@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
-初始化資料腳本 - FastAPI 版本
-用於建立測試資料和預設模板
+Data Initialization Script - FastAPI Version
+For creating test data and default templates
 """
 
 import asyncio
@@ -9,7 +9,7 @@ import sys
 import os
 from datetime import date
 
-# 添加專案根目錄到 Python 路徑
+# Add project root directory to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy.orm import Session
@@ -19,139 +19,139 @@ from app.models.anesthesia import AnesthesiaGuidelineTemplate
 
 
 async def create_sample_patients():
-    """建立範例患者資料"""
-    print("建立範例患者資料...")
-    
+    """Create sample patient data"""
+    print("Creating sample patient data...")
+
     db = SessionLocal()
     try:
-        # 建立患者 1
+        # Create patient 1
         patient1 = Patient(
             health_insurance_number='1234567890',
-            full_name='王小明',
+            full_name='John Smith',
             date_of_birth=date(1985, 5, 15),
             gender='M',
-            phone_number='0912345678',
-            emergency_contact_name='王大明',
-            emergency_contact_relationship='配偶',
-            emergency_contact_phone='0912345679'
+            phone_number='555-0123',
+            emergency_contact_name='Jane Smith',
+            emergency_contact_relationship='Spouse',
+            emergency_contact_phone='555-0124'
         )
-        
+
         db.add(patient1)
         db.commit()
         db.refresh(patient1)
-        
-        # 建立患者 1 的醫療病史
+
+        # Create medical history for patient 1
         medical_history1 = MedicalHistory(
             patient_id=patient1.id,
-            allergies='青黴素過敏',
-            chronic_conditions='高血壓',
-            current_medications='降血壓藥物',
-            previous_surgeries='闌尾切除術 (2010年)',
-            family_history='父親有糖尿病史'
+            allergies='Penicillin allergy',
+            chronic_conditions='Hypertension',
+            current_medications='Blood pressure medication',
+            previous_surgeries='Appendectomy (2010)',
+            family_history='Father has diabetes'
         )
-        
+
         db.add(medical_history1)
         db.commit()
-        
-        # 建立患者 2
+
+        # Create patient 2
         patient2 = Patient(
             health_insurance_number='0987654321',
-            full_name='李小華',
+            full_name='Emily Johnson',
             date_of_birth=date(1990, 8, 22),
             gender='F',
-            phone_number='0987654321',
-            emergency_contact_name='李大明',
-            emergency_contact_relationship='父親',
-            emergency_contact_phone='0987654322'
+            phone_number='555-4321',
+            emergency_contact_name='Robert Johnson',
+            emergency_contact_relationship='Father',
+            emergency_contact_phone='555-4322'
         )
-        
+
         db.add(patient2)
         db.commit()
         db.refresh(patient2)
-        
-        # 建立患者 2 的醫療病史
+
+        # Create medical history for patient 2
         medical_history2 = MedicalHistory(
             patient_id=patient2.id,
-            allergies='無',
-            chronic_conditions='無',
-            current_medications='無',
-            previous_surgeries='無',
-            family_history='母親有乳癌病史'
+            allergies='None',
+            chronic_conditions='None',
+            current_medications='None',
+            previous_surgeries='None',
+            family_history='Mother has breast cancer history'
         )
-        
+
         db.add(medical_history2)
         db.commit()
-        
-        print(f"已建立 {db.query(Patient).count()} 位患者")
-        
+
+        print(f"Created {db.query(Patient).count()} patients")
+
     finally:
         db.close()
 
 
 async def create_anesthesia_templates():
-    """建立麻醉須知模板"""
-    print("建立麻醉須知模板...")
-    
+    """Create anesthesia guideline templates"""
+    print("Creating anesthesia guideline templates...")
+
     db = SessionLocal()
     try:
-        # 全身麻醉模板
+        # General anesthesia template
         template1 = AnesthesiaGuidelineTemplate(
-            template_name='標準全身麻醉模板',
+            template_name='Standard General Anesthesia Template',
             anesthesia_type='general',
-            anesthesia_type_template='全身麻醉是讓您在手術過程中完全失去意識的麻醉方式。麻醉醫師會通過靜脈注射和氣體麻醉來確保您在手術期間完全無意識。',
-            surgery_process_template='手術將在您完全無意識的狀態下進行。麻醉醫師會全程監控您的生命徵象，確保手術安全進行。',
-            expected_sensations_template='您將不會感受到任何疼痛或不適。手術結束後，您會逐漸恢復意識，可能會感到輕微的頭暈或噁心。',
-            potential_risks_template='可能包括：噁心、嘔吐、喉嚨痛、頭暈、肌肉疼痛等。嚴重併發症極為罕見，包括過敏反應、呼吸問題等。',
-            pre_surgery_template='請按照醫師指示進行術前準備，包括禁食禁水、停用特定藥物等。',
-            fasting_template='手術前8小時開始禁食，2小時前禁水。這是為了避免麻醉時發生嘔吐和吸入性肺炎的風險。',
-            medication_template='請告知醫師您目前服用的所有藥物。某些藥物（如抗凝血劑）可能需要提前停用。',
-            common_questions_template='Q: 麻醉會不會有副作用？\nA: 大多數患者只會有輕微的副作用，如噁心、頭暈等，通常24小時內會消失。',
-            post_surgery_template='術後請按照醫師指示進行照護，包括傷口護理、藥物服用、活動限制等。如有異常請立即就醫。'
+            anesthesia_type_template='General anesthesia is a method that makes you completely unconscious during surgery. The anesthesiologist will ensure you are completely unconscious during the operation through intravenous injection and gas anesthesia.',
+            surgery_process_template='The surgery will be performed while you are completely unconscious. The anesthesiologist will monitor your vital signs throughout to ensure the surgery proceeds safely.',
+            expected_sensations_template='You will not feel any pain or discomfort. After the surgery, you will gradually regain consciousness and may feel mild dizziness or nausea.',
+            potential_risks_template='May include: nausea, vomiting, sore throat, dizziness, muscle pain, etc. Serious complications are extremely rare, including allergic reactions, breathing problems, etc.',
+            pre_surgery_template='Please prepare for surgery according to your doctor\'s instructions, including fasting, stopping certain medications, etc.',
+            fasting_template='Begin fasting 8 hours before surgery, no water 2 hours before. This is to avoid the risk of vomiting and aspiration pneumonia during anesthesia.',
+            medication_template='Please inform your doctor of all medications you are currently taking. Some medications (such as anticoagulants) may need to be discontinued in advance.',
+            common_questions_template='Q: Will anesthesia have side effects?\nA: Most patients only have mild side effects, such as nausea and dizziness, which usually disappear within 24 hours.',
+            post_surgery_template='After surgery, please follow your doctor\'s instructions for care, including wound care, medication, activity restrictions, etc. Seek medical attention immediately if any abnormalities occur.'
         )
-        
+
         db.add(template1)
-        
-        # 局部麻醉模板
+
+        # Local anesthesia template
         template2 = AnesthesiaGuidelineTemplate(
-            template_name='標準局部麻醉模板',
+            template_name='Standard Local Anesthesia Template',
             anesthesia_type='local',
-            anesthesia_type_template='局部麻醉是只麻醉手術部位，讓您在手術過程中保持清醒的麻醉方式。',
-            surgery_process_template='手術過程中您會保持清醒，但手術部位不會感到疼痛。',
-            expected_sensations_template='手術部位會有麻木感，但不會疼痛。您可能會感受到觸碰或壓力，但不會有痛感。',
-            potential_risks_template='可能包括：注射部位疼痛、瘀血、感染等。嚴重併發症極為罕見。',
-            pre_surgery_template='請按照醫師指示進行術前準備。',
-            fasting_template='通常不需要禁食，但請按照醫師指示。',
-            medication_template='請告知醫師您目前服用的所有藥物。',
-            common_questions_template='Q: 局部麻醉會不會痛？\nA: 注射時會有輕微刺痛，但很快就會麻木。',
-            post_surgery_template='術後請按照醫師指示進行照護。麻醉效果通常會持續數小時。'
+            anesthesia_type_template='Local anesthesia numbs only the surgical area, allowing you to remain awake during the procedure.',
+            surgery_process_template='You will remain awake during the surgery, but the surgical area will not feel pain.',
+            expected_sensations_template='The surgical area will feel numb but not painful. You may feel touch or pressure but no pain.',
+            potential_risks_template='May include: pain at injection site, bruising, infection, etc. Serious complications are extremely rare.',
+            pre_surgery_template='Please prepare for surgery according to your doctor\'s instructions.',
+            fasting_template='Fasting is usually not required, but please follow your doctor\'s instructions.',
+            medication_template='Please inform your doctor of all medications you are currently taking.',
+            common_questions_template='Q: Will local anesthesia hurt?\nA: There will be a slight sting during injection, but it will quickly become numb.',
+            post_surgery_template='After surgery, please follow your doctor\'s instructions for care. The anesthetic effect usually lasts several hours.'
         )
-        
+
         db.add(template2)
         db.commit()
-        
-        print(f"已建立 {db.query(AnesthesiaGuidelineTemplate).count()} 個模板")
-        
+
+        print(f"Created {db.query(AnesthesiaGuidelineTemplate).count()} templates")
+
     finally:
         db.close()
 
 
 async def main():
-    """主函數"""
-    print("開始初始化資料...")
-    
-    # 初始化資料庫
+    """Main function"""
+    print("Starting data initialization...")
+
+    # Initialize database
     await init_db()
-    
-    # 建立範例患者
+
+    # Create sample patients
     await create_sample_patients()
-    
-    # 建立麻醉模板
+
+    # Create anesthesia templates
     await create_anesthesia_templates()
-    
-    print("資料初始化完成！")
-    print("\n範例患者資訊：")
-    print("患者1: 王小明 (健保號: 1234567890)")
-    print("患者2: 李小華 (健保號: 0987654321)")
+
+    print("Data initialization completed!")
+    print("\nSample patient information:")
+    print("Patient 1: John Smith (Insurance #: 1234567890)")
+    print("Patient 2: Emily Johnson (Insurance #: 0987654321)")
 
 
 if __name__ == '__main__':
