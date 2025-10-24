@@ -160,14 +160,4 @@ npm test
 - [Local LLM Setup Guide](LOCAL_LLM_GUIDE.md)
 - [API Documentation](http://localhost:8000/docs)
 
-## 🤝 Contributing
-
-Issues and Pull Requests are welcome!
-
-## 📄 License
-
-MIT License
-
 ---
-
-🎉 **System Ready!** You can now start using this powerful AI-powered anesthesia guidelines generation system!
