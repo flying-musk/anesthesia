@@ -20,7 +20,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "date-fns": "^2.29.3",
-    "react-hook-form": "^6.45.2",
+    "react-hook-form": "^7.65.0",
     "@hookform/resolvers": "^2.9.11",
     "yup": "^0.32.11",
     "react-query": "^3.39.3",
