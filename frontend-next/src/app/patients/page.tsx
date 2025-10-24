@@ -22,7 +22,7 @@ export default function PatientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const { data, isLoading } = usePatients();
 
-  const filteredPatients = data?.items.filter(
+  const filteredPatients = data?.items?.filter(
     (patient) =>
       patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       patient.health_insurance_number

@@ -121,7 +121,7 @@ export default function DashboardPage() {
                   <Skeleton key={i} className="h-12 w-full" />
                 ))}
               </div>
-            ) : patientsData?.items.length ? (
+            ) : patientsData?.items?.length ? (
               <div className="space-y-3">
                 {patientsData.items.map((patient) => (
                   <Link
@@ -154,7 +154,7 @@ export default function DashboardPage() {
                   <Skeleton key={i} className="h-12 w-full" />
                 ))}
               </div>
-            ) : guidelinesData?.items.length ? (
+            ) : guidelinesData?.items?.length ? (
               <div className="space-y-3">
                 {guidelinesData.items.map((guideline) => (
                   <Link
