@@ -1,13 +1,17 @@
 import { z } from 'zod';
 
 export const patientSchema = z.object({
-  health_insurance_number: z.string().min(1, 'Health insurance number is required'),
+  health_insurance_number: z
+    .string()
+    .min(1, 'Health insurance number is required')
+    .length(10, 'Health insurance number must be exactly 10 digits')
+    .regex(/^\d+$/, 'Health insurance number must contain only numbers'),
   full_name: z.string().min(1, 'Full name is required'),
   date_of_birth: z.string().min(1, 'Date of birth is required'),
   gender: z.enum(['M', 'F', 'O'], {
     message: 'Please select a gender',
   }),
-  phone_number: z.string().min(1, 'Phone number is required'),
+  phone_number: z.string().optional(),
   emergency_contact_name: z.string().optional(),
   emergency_contact_relationship: z.string().optional(),
   emergency_contact_phone: z.string().optional(),
