@@ -1,45 +1,48 @@
-# 🚀 快速啟動指南 (Hackathon Demo)
+# 🚀 Quick Start Guide (Hackathon Demo)
 
-## 一鍵啟動 (推薦)
+## One-Click Start (Recommended)
 
 ```bash
-# 1. 安裝依賴
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. 初始化 SQLite 資料庫和 demo 資料
+# 2. Initialize SQLite database and demo data
 python start_demo.py
 
-# 3. 啟動伺服器
+# 3. Start the server
 uvicorn app.main:app --reload
 ```
 
-## 訪問系統
+## Accessing the System
 
-- **API 文檔**: http://localhost:8000/docs
-- **ReDoc 文檔**: http://localhost:8000/redoc
-- **健康檢查**: http://localhost:8000/health
+  - **API Documentation**: http://localhost:8000/docs
+  - **ReDoc Documentation**: http://localhost:8000/redoc
+  - **Health Check**: http://localhost:8000/health
 
-## Demo 資料
+## Demo Data
 
-系統會自動建立以下 demo 資料：
+The system will automatically create the following demo data:
 
-### 患者 1: 王小明
-- 健保號: `1234567890`
-- 姓名: `王小明`
-- 生日: `1985-05-15`
-- 性別: 男性
-- 醫療病史: 青黴素過敏、高血壓
+### Patient 1: 王小明 (Wang Xiao-Ming)
 
-### 患者 2: 李小華
-- 健保號: `0987654321`
-- 姓名: `李小華`
-- 生日: `1990-08-22`
-- 性別: 女性
-- 醫療病史: 無特殊病史
+  - Health Insurance Number: `1234567890`
+  - Name: `王小明`
+  - Date of Birth: `1985-05-15`
+  - Gender: Male
+  - Medical History: Penicillin allergy, Hypertension
 
-## 測試 API
+### Patient 2: 李小華 (Li Xiao-Hua)
 
-### 1. 搜尋患者
+  - Health Insurance Number: `0987654321`
+  - Name: `李小華`
+  - Date of Birth: `1990-08-22`
+  - Gender: Female
+  - Medical History: No special medical history
+
+## Testing the API
+
+### 1\. Search Patients
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/patients/search" \
   -H "Content-Type: application/json" \
@@ -50,7 +53,8 @@ curl -X POST "http://localhost:8000/api/v1/patients/search" \
   }'
 ```
 
-### 2. 生成麻醉須知
+### 2\. Generate Anesthesia Guidelines
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/anesthesia/guidelines/generate" \
   -H "Content-Type: application/json" \
@@ -64,38 +68,42 @@ curl -X POST "http://localhost:8000/api/v1/anesthesia/guidelines/generate" \
   }'
 ```
 
-### 3. 自動測試
+### 3\. Automated Testing
+
 ```bash
 python scripts/test_api.py
 ```
 
-## 系統特色
+## System Features
 
-✅ **零配置**: 使用 SQLite，無需安裝資料庫  
-✅ **快速啟動**: 一鍵初始化 demo 資料  
-✅ **自動文檔**: 自動生成 API 文檔  
-✅ **AI 整合**: 使用 OpenAI GPT-4 生成個人化須知  
-✅ **完整功能**: 患者管理、醫療病史、麻醉須知生成  
+✅ **Zero Configuration**: Uses SQLite, no database installation required  
+✅ **Quick Start**: One-click initialization for demo data  
+✅ **Auto-Documentation**: Automatically generates API docs  
+✅ **AI Integration**: Uses OpenAI GPT-4 to generate personalized guidelines  
+✅ **Full-Featured**: Patient management, medical history, anesthesia guideline generation
 
-## 故障排除
+## Troubleshooting
 
-### 如果遇到 OpenAI API 錯誤
-1. 設定環境變數: `export OPENAI_API_KEY=your_api_key_here`
-2. 或建立 `.env` 檔案並設定 `OPENAI_API_KEY=your_api_key_here`
+### If you encounter an OpenAI API error
 
-### 如果遇到端口被占用
+1.  Set the environment variable: `export OPENAI_API_KEY=your_api_key_here`
+2.  Or create a `.env` file and set `OPENAI_API_KEY=your_api_key_here`
+
+### If the port is occupied
+
 ```bash
-# 使用不同端口
+# Use a different port
 uvicorn app.main:app --reload --port 8001
 ```
 
-## 生產環境部署
+## Production Deployment
 
-如需部署到生產環境，建議：
-1. 使用 PostgreSQL 替代 SQLite
-2. 設定環境變數
-3. 使用 Gunicorn 或 Uvicorn 作為 WSGI 伺服器
+For deployment to a production environment, it is recommended to:
 
----
+1.  Use PostgreSQL instead of SQLite
+2.  Set environment variables
+3.  Use Gunicorn or Uvicorn as the WSGI server
 
-🎯 **Hackathon 準備完成！** 現在你可以專注於前端開發和系統整合了！
+-----
+
+🎯 **Hackathon Prep Complete\!** Now you can focus on front-end development and system integration\!

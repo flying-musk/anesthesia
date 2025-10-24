@@ -28,8 +28,6 @@ anesthesia/
 ## 🚀 Quick Start
 
 ### 1. Start Backend Service
-
-```bash
 cd backend
 pip install -r requirements.txt
 python start_demo.py
