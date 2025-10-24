@@ -6,7 +6,7 @@ An AI-based personalized anesthesia guidelines generation system with multi-lang
 
 ```
 anesthesia/
-├── frontend/                 # React frontend application
+├── frontend-next/           # Next.js frontend application
 │   ├── public/              # Static assets
 │   ├── src/
 │   │   ├── components/      # React components
@@ -37,9 +37,9 @@ uvicorn app.main:app --reload
 ### 2. Start Frontend Service
 
 ```bash
-cd frontend
+cd frontend-next
 npm install
-npm start
+npm run dev
 ```
 
 ### 3. Access the System
@@ -77,10 +77,9 @@ Users can switch languages using the language selector in the top-right corner.
 ## 🛠️ Tech Stack
 
 ### Frontend
+- Next.js 14
 - React 18
 - Material-UI (MUI)
-- React Router
-- React Query
 - React Hook Form
 - i18next (Internationalization)
 - Axios
@@ -148,7 +147,7 @@ python scripts/test_api.py
 
 ### Frontend Testing
 ```bash
-cd frontend
+cd frontend-next
 npm test
 ```
 

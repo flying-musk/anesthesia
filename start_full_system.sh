@@ -45,7 +45,7 @@ fi
 
 # 啟動前端
 echo "🎨 啟動前端服務..."
-cd ../frontend
+cd ../frontend-next
 
 # 檢查是否需要安裝依賴
 if [ ! -d "node_modules" ]; then
@@ -53,8 +53,8 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-echo "🚀 啟動React開發服務器..."
-npm start &
+echo "🚀 啟動Next.js開發服務器..."
+npm run dev &
 FRONTEND_PID=$!
 echo "✅ 前端服務已啟動 (PID: $FRONTEND_PID)"
 
