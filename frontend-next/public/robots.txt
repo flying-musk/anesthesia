@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas if any
+Disallow: /api/
+
+# Sitemap location
+Sitemap: http://localhost:3000/sitemap.xml

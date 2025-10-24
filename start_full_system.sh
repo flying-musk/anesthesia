@@ -1,79 +1,79 @@
 #!/bin/bash
 
-echo "🚀 啟動麻醉前須知生成系統 (完整版)"
+echo "🚀 Starting Anesthesia Management System (Full Version)"
 echo "=================================================="
 
-# 檢查Node.js是否安裝
+# Check if Node.js is installed
 if ! command -v node &> /dev/null; then
-    echo "❌ Node.js未安裝，請先安裝Node.js"
-    echo "💡 下載地址: https://nodejs.org/"
+    echo "❌ Node.js is not installed, please install Node.js first"
+    echo "💡 Download: https://nodejs.org/"
     exit 1
 fi
 
-# 檢查Python是否安裝
+# Check if Python is installed
 if ! command -v python3 &> /dev/null; then
-    echo "❌ Python3未安裝，請先安裝Python3"
+    echo "❌ Python3 is not installed, please install Python3 first"
     exit 1
 fi
 
-echo "✅ 環境檢查完成"
+echo "✅ Environment check completed"
 
-# 啟動後端
-echo "📡 啟動後端服務..."
+# Start backend
+echo "📡 Starting backend service..."
 cd backend
 python3 start_demo.py
-echo "✅ 後端初始化完成"
+echo "✅ Backend initialization completed"
 
-# 在後台啟動後端服務器
-echo "🚀 啟動FastAPI服務器..."
+# Start backend server in background
+echo "🚀 Starting FastAPI server..."
 uvicorn app.main:app --reload --port 8000 &
 BACKEND_PID=$!
-echo "✅ 後端服務已啟動 (PID: $BACKEND_PID)"
+echo "✅ Backend service started (PID: $BACKEND_PID)"
 
-# 等待後端啟動
-echo "⏳ 等待後端服務啟動..."
+# Wait for backend to start
+echo "⏳ Waiting for backend service to start..."
 sleep 5
 
-# 檢查後端是否正常運行
+# Check if backend is running properly
 if curl -s http://localhost:8000/health > /dev/null; then
-    echo "✅ 後端服務運行正常"
+    echo "✅ Backend service running normally"
 else
-    echo "❌ 後端服務啟動失敗"
+    echo "❌ Backend service failed to start"
     kill $BACKEND_PID
     exit 1
 fi
 
-# 啟動前端
-echo "🎨 啟動前端服務..."
-cd ../frontend
+# Start frontend
+echo "🎨 Starting frontend service..."
+cd ../frontend-next
 
-# 檢查是否需要安裝依賴
+# Check if dependencies need to be installed
 if [ ! -d "node_modules" ]; then
-    echo "📦 安裝前端依賴..."
+    echo "📦 Installing frontend dependencies..."
     npm install
 fi
 
-echo "🚀 啟動React開發服務器..."
-npm start &
+echo "🚀 Starting Next.js development server..."
+npm run dev &
 FRONTEND_PID=$!
-echo "✅ 前端服務已啟動 (PID: $FRONTEND_PID)"
+echo "✅ Frontend service started (PID: $FRONTEND_PID)"
 
 echo ""
-echo "🎉 系統啟動完成！"
+echo "🎉 System startup completed!"
 echo "=================================================="
-echo "📱 前端界面: http://localhost:3000"
-echo "📡 API文檔: http://localhost:8000/docs"
-echo "🔍 健康檢查: http://localhost:8000/health"
+echo "📱 Frontend UI: http://localhost:3000"
+echo "📡 API Docs: http://localhost:8000/docs"
+echo "🔍 Health Check: http://localhost:8000/health"
 echo ""
-echo "🌍 支援語言:"
-echo "  - 🇹🇼 繁體中文"
+echo "🌍 Supported Languages:"
+echo "  - 🇹🇼 Traditional Chinese"
 echo "  - 🇺🇸 English"
 echo "  - 🇫🇷 Français"
 echo ""
-echo "🛑 停止服務:"
-echo "  - 按 Ctrl+C 停止前端"
-echo "  - 運行 'kill $BACKEND_PID' 停止後端"
+echo "🛑 Stop Services:"
+echo "  - Press Ctrl+C to stop frontend"
+echo "  - Run 'kill $BACKEND_PID' to stop backend"
 echo ""
 
-# 等待用戶中斷
+# Wait for user interrupt
 wait $FRONTEND_PID

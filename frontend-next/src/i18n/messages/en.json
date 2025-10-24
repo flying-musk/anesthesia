@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "Anesthesia Management System",
+    "description": "AI-Powered Anesthesia Guidelines Generation"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "guidelines": "Guidelines",
+    "createPatient": "Create Patient",
+    "generateGuideline": "Generate Guideline"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "stats": {
+      "totalPatients": "Total Patients",
+      "totalGuidelines": "Total Guidelines",
+      "recentPatients": "Recent Patients",
+      "recentGuidelines": "Recent Guidelines"
+    }
+  },
+  "patients": {
+    "title": "Patient Management",
+    "createNew": "Create New Patient",
+    "viewAll": "View All Patients",
+    "details": "Patient Details",
+    "search": "Search patients...",
+    "noPatients": "No patients found"
+  },
+  "guidelines": {
+    "title": "Anesthesia Guidelines",
+    "generate": "Generate Guideline",
+    "viewAll": "View All Guidelines",
+    "details": "Guideline Details",
+    "noGuidelines": "No guidelines found"
+  },
+  "form": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "generating": "Generating..."
+  },
+  "common": {
+    "actions": "Actions",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "success": "Success",
+    "error": "Error"
+  }
+}
