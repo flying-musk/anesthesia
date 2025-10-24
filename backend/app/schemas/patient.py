@@ -3,9 +3,21 @@ Pydantic models for patients.
 """
 
 from pydantic import BaseModel, Field, validator
-from typing import Optional, List
+from typing import Optional, List, Generic, TypeVar
 from datetime import date, datetime
 from enum import Enum
+from math import ceil
+
+T = TypeVar('T')
+
+
+class PaginatedResponse(BaseModel, Generic[T]):
+    """Generic paginated response model."""
+    items: List[T]
+    total: int
+    page: int
+    size: int
+    pages: int
 
 
 class GenderEnum(str, Enum):
