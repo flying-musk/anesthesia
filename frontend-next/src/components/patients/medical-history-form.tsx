@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { useCreateMedicalHistory, useUpdateMedicalHistory } from '@/lib/hooks/use-patients';
 import { useLanguage } from '@/contexts/language-context';
+import { useTranslations } from '@/hooks/use-translations';
 import { medicalHistorySchema } from '@/lib/validators/patient';
 import type { MedicalHistoryFormData } from '@/lib/validators/patient';
 
@@ -22,6 +23,7 @@ interface MedicalHistoryFormProps {
 export function MedicalHistoryForm({ patientId, existingData, onSuccess }: MedicalHistoryFormProps) {
   const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { language } = useLanguage();
+  const t = useTranslations();
   
   const createMutation = useCreateMedicalHistory();
   const updateMutation = useUpdateMedicalHistory();
@@ -37,6 +39,20 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
       other_medical_info: existingData?.other_medical_info || '',
     },
   });
+
+  // Update form values when existingData changes (e.g., language switch)
+  useEffect(() => {
+    if (existingData) {
+      form.reset({
+        allergies: existingData.allergies || '',
+        chronic_conditions: existingData.chronic_conditions || '',
+        current_medications: existingData.current_medications || '',
+        previous_surgeries: existingData.previous_surgeries || '',
+        family_history: existingData.family_history || '',
+        other_medical_info: existingData.other_medical_info || '',
+      });
+    }
+  }, [existingData, form]);
 
   const onSubmit = async (data: MedicalHistoryFormData) => {
     try {
@@ -77,9 +93,9 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
           name="allergies"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Allergies</FormLabel>
+              <FormLabel>{t.allergies}</FormLabel>
               <FormControl>
-                <Textarea placeholder="List any allergies..." {...field} />
+                <Textarea placeholder={t.allergies} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -90,9 +106,9 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
           name="chronic_conditions"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Chronic Conditions</FormLabel>
+              <FormLabel>{t.chronicConditions}</FormLabel>
               <FormControl>
-                <Textarea placeholder="List any chronic conditions..." {...field} />
+                <Textarea placeholder={t.chronicConditions} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -103,9 +119,9 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
           name="current_medications"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Current Medications</FormLabel>
+              <FormLabel>{t.currentMedications}</FormLabel>
               <FormControl>
-                <Textarea placeholder="List current medications..." {...field} />
+                <Textarea placeholder={t.currentMedications} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -116,9 +132,9 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
           name="previous_surgeries"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Previous Surgeries</FormLabel>
+              <FormLabel>{t.previousSurgeries}</FormLabel>
               <FormControl>
-                <Textarea placeholder="List previous surgeries..." {...field} />
+                <Textarea placeholder={t.previousSurgeries} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -129,9 +145,9 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
           name="family_history"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Family History</FormLabel>
+              <FormLabel>{t.familyHistory}</FormLabel>
               <FormControl>
-                <Textarea placeholder="Describe relevant family medical history..." {...field} />
+                <Textarea placeholder={t.familyHistory} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -142,9 +158,9 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
           name="other_medical_info"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Other Medical Information</FormLabel>
+              <FormLabel>{t.otherMedicalInfo}</FormLabel>
               <FormControl>
-                <Textarea placeholder="Any other relevant medical information..." {...field} />
+                <Textarea placeholder={t.otherMedicalInfo} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -156,10 +172,10 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
           disabled={createMutation.isPending || updateMutation.isPending}
         >
           {createMutation.isPending || updateMutation.isPending
-            ? 'Saving...'
+            ? t.saving
             : existingData
-            ? 'Update Medical History'
-            : 'Create Medical History'
+            ? t.updateMedicalHistory
+            : t.createMedicalHistory
           }
         </Button>
       </form>
