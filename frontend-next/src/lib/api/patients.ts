@@ -19,8 +19,10 @@ export const patientsApi = {
   },
 
   // Get patient by ID
-  getById: async (id: number) => {
-    const { data } = await apiClient.get<Patient>(`/patients/${id}`);
+  getById: async (id: number, language?: string) => {
+    const { data } = await apiClient.get<Patient>(`/patients/${id}`, {
+      params: language ? { language } : {},
+    });
     return data;
   },
 
@@ -52,9 +54,12 @@ export const patientsApi = {
   },
 
   // Medical History
-  getMedicalHistory: async (patientId: number) => {
+  getMedicalHistory: async (patientId: number, language?: string) => {
     const { data } = await apiClient.get<MedicalHistory>(
-      `/patients/${patientId}/medical-history`
+      `/patients/${patientId}/medical-history`,
+      {
+        params: language ? { language } : {},
+      }
     );
     return data;
   },
@@ -76,9 +81,12 @@ export const patientsApi = {
   },
 
   // Surgery Records
-  getSurgeryRecords: async (patientId: number) => {
+  getSurgeryRecords: async (patientId: number, language?: string) => {
     const { data } = await apiClient.get<SurgeryRecord[]>(
-      `/patients/${patientId}/surgery-records`
+      `/patients/${patientId}/surgery-records`,
+      {
+        params: language ? { language } : {},
+      }
     );
     return data;
   },
