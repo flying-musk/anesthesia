@@ -2,9 +2,9 @@
 Patient-related API endpoints
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from app.core.database import get_db
 from app.models.patient import Patient, MedicalHistory, SurgeryRecord
@@ -12,8 +12,9 @@ from app.schemas.patient import (
     PatientCreate, PatientUpdate, PatientResponse, PatientDetailResponse,
     PatientSearchRequest, MedicalHistoryCreate, MedicalHistoryUpdate,
     MedicalHistoryResponse, SurgeryRecordCreate, SurgeryRecordUpdate,
-    SurgeryRecordResponse, PaginatedResponse
+    SurgeryRecordResponse, PaginatedResponse, LanguageEnum
 )
+from app.services.medical_multilingual_service import medical_multilingual_service
 from math import ceil
 
 router = APIRouter()
@@ -66,7 +67,11 @@ async def get_patients(page: int = 1, size: int = 100, db: Session = Depends(get
 
 
 @router.get("/{patient_id}", response_model=PatientDetailResponse)
-async def get_patient(patient_id: int, db: Session = Depends(get_db)):
+async def get_patient(
+    patient_id: int, 
+    language: Optional[LanguageEnum] = Query(None, description="Language preference"),
+    db: Session = Depends(get_db)
+):
     """Get specific patient details"""
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
@@ -75,15 +80,29 @@ async def get_patient(patient_id: int, db: Session = Depends(get_db)):
             detail="Patient not found"
         )
     
-    # Get medical history
-    medical_history = db.query(MedicalHistory).filter(
-        MedicalHistory.patient_id == patient_id
-    ).first()
+    # Get medical history based on language preference
+    if language:
+        medical_history = db.query(MedicalHistory).filter(
+            MedicalHistory.patient_id == patient_id,
+            MedicalHistory.language == language.value
+        ).order_by(MedicalHistory.created_at.desc()).first()
+    else:
+        # Return the most recent medical history if no language specified
+        medical_history = db.query(MedicalHistory).filter(
+            MedicalHistory.patient_id == patient_id
+        ).order_by(MedicalHistory.created_at.desc()).first()
 
-    # Get surgery records
-    surgery_records = db.query(SurgeryRecord).filter(
-        SurgeryRecord.patient_id == patient_id
-    ).all()
+    # Get surgery records based on language preference
+    if language:
+        surgery_records = db.query(SurgeryRecord).filter(
+            SurgeryRecord.patient_id == patient_id,
+            SurgeryRecord.language == language.value
+        ).all()
+    else:
+        # Return all surgery records if no language specified
+        surgery_records = db.query(SurgeryRecord).filter(
+            SurgeryRecord.patient_id == patient_id
+        ).all()
     
     return PatientDetailResponse(
         **patient.__dict__,
@@ -163,28 +182,46 @@ async def search_patient(search_request: PatientSearchRequest, db: Session = Dep
 
 
 @router.get("/{patient_id}/medical-history", response_model=MedicalHistoryResponse)
-async def get_patient_medical_history(patient_id: int, db: Session = Depends(get_db)):
+async def get_patient_medical_history(
+    patient_id: int, 
+    language: Optional[LanguageEnum] = Query(None, description="Language preference"),
+    db: Session = Depends(get_db)
+):
     """Get patient medical history"""
-    medical_history = db.query(MedicalHistory).filter(
-        MedicalHistory.patient_id == patient_id
-    ).first()
+    # If language is specified, find the medical history with the specified language
+    if language:
+        medical_history = db.query(MedicalHistory).filter(
+            MedicalHistory.patient_id == patient_id,
+            MedicalHistory.language == language.value
+        ).order_by(MedicalHistory.created_at.desc()).first()
 
-    if not medical_history:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Medical history not found for this patient"
-        )
+        if not medical_history:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Medical history not found in language: {language.value}"
+            )
+    else:
+        # Return the most recent medical history if no language specified
+        medical_history = db.query(MedicalHistory).filter(
+            MedicalHistory.patient_id == patient_id
+        ).order_by(MedicalHistory.created_at.desc()).first()
+
+        if not medical_history:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Medical history not found for this patient"
+            )
     
     return medical_history
 
 
-@router.post("/{patient_id}/medical-history", response_model=MedicalHistoryResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/{patient_id}/medical-history", response_model=List[MedicalHistoryResponse], status_code=status.HTTP_201_CREATED)
 async def create_patient_medical_history(
     patient_id: int,
     medical_history: MedicalHistoryCreate,
     db: Session = Depends(get_db)
 ):
-    """Create patient medical history"""
+    """Create patient medical history in multiple languages"""
     # Check if patient exists
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
@@ -204,12 +241,12 @@ async def create_patient_medical_history(
             detail="Medical history already exists for this patient. Please use the update endpoint"
         )
     
-    db_medical_history = MedicalHistory(**medical_history.dict())
-    db.add(db_medical_history)
-    db.commit()
-    db.refresh(db_medical_history)
+    # Create multilingual medical history
+    medical_histories = await medical_multilingual_service.create_medical_history_multilingual(
+        db, patient_id, medical_history
+    )
     
-    return db_medical_history
+    return medical_histories
 
 
 @router.put("/{patient_id}/medical-history", response_model=MedicalHistoryResponse)
@@ -240,22 +277,34 @@ async def update_patient_medical_history(
 
 
 @router.get("/{patient_id}/surgery-records", response_model=List[SurgeryRecordResponse])
-async def get_patient_surgery_records(patient_id: int, db: Session = Depends(get_db)):
+async def get_patient_surgery_records(
+    patient_id: int, 
+    language: Optional[LanguageEnum] = Query(None, description="Language preference"),
+    db: Session = Depends(get_db)
+):
     """Get patient surgery records"""
-    surgery_records = db.query(SurgeryRecord).filter(
-        SurgeryRecord.patient_id == patient_id
-    ).all()
+    if language:
+        # Get surgery records in the specified language
+        surgery_records = db.query(SurgeryRecord).filter(
+            SurgeryRecord.patient_id == patient_id,
+            SurgeryRecord.language == language.value
+        ).all()
+    else:
+        # Return all surgery records (default behavior)
+        surgery_records = db.query(SurgeryRecord).filter(
+            SurgeryRecord.patient_id == patient_id
+        ).all()
 
     return surgery_records
 
 
-@router.post("/{patient_id}/surgery-records", response_model=SurgeryRecordResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/{patient_id}/surgery-records", response_model=List[SurgeryRecordResponse], status_code=status.HTTP_201_CREATED)
 async def create_patient_surgery_record(
     patient_id: int,
     surgery_record: SurgeryRecordCreate,
     db: Session = Depends(get_db)
 ):
-    """Create patient surgery record"""
+    """Create patient surgery record in multiple languages"""
     # Check if patient exists
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
@@ -264,9 +313,9 @@ async def create_patient_surgery_record(
             detail="Patient not found"
         )
     
-    db_surgery_record = SurgeryRecord(**surgery_record.dict())
-    db.add(db_surgery_record)
-    db.commit()
-    db.refresh(db_surgery_record)
+    # Create multilingual surgery record
+    surgery_records = await medical_multilingual_service.create_surgery_record_multilingual(
+        db, patient_id, surgery_record
+    )
     
-    return db_surgery_record
+    return surgery_records

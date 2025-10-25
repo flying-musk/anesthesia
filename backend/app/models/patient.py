@@ -40,6 +40,8 @@ class MedicalHistory(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
+    language = Column(String(10), nullable=False, default="en")  # en, zh, fr
+    group_id = Column(Integer, nullable=True, index=True)  # 用於關聯同一組的多語言版本
     
     # 醫療資訊
     allergies = Column(Text, nullable=True)
@@ -63,6 +65,8 @@ class SurgeryRecord(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
+    language = Column(String(10), nullable=False, default="en")  # en, zh, fr
+    group_id = Column(Integer, nullable=True, index=True)  # 用於關聯同一組的多語言版本
     
     # 手術資訊
     surgery_name = Column(String(200), nullable=False)
