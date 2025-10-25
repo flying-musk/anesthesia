@@ -24,6 +24,8 @@ export const useGuidelinesByPatient = (patientId: number, language?: string) => 
     queryKey: QUERY_KEYS.guidelines.byPatient(patientId, language),
     queryFn: () => guidelinesApi.getByPatient(patientId, language),
     enabled: !!patientId,
+    staleTime: 0, // Always consider data stale to ensure fresh fetch on language change
+    gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
 
