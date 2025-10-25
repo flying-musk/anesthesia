@@ -30,7 +30,7 @@ async def test_system_without_ollama():
             print("\n2️⃣ 測試患者搜尋...")
             search_data = {
                 "health_insurance_number": "1234567890",
-                "full_name": "王小明",
+                "full_name": "John Smith",
                 "date_of_birth": "1985-05-15"
             }
             
@@ -47,11 +47,11 @@ async def test_system_without_ollama():
             print("\n3️⃣ 測試生成麻醉須知...")
             guideline_data = {
                 "patient_id": patient_id,
-                "surgery_name": "腹腔鏡膽囊切除術",
+                "surgery_name": "Laparoscopic Cholecystectomy",
                 "anesthesia_type": "general",
                 "surgery_date": "2024-01-15",
-                "surgeon_name": "李醫師",
-                "anesthesiologist_name": "陳醫師"
+                "surgeon_name": "Dr. Smith",
+                "anesthesiologist_name": "Dr. Johnson"
             }
             
             response = await client.post(f"{BASE_URL}/anesthesia/guidelines/generate", json=guideline_data)

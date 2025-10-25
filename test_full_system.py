@@ -53,11 +53,11 @@ def test_anesthesia_generate(patient_id):
     try:
         data = {
             "patient_id": patient_id,
-            "surgery_name": "腹腔鏡膽囊切除術",
+            "surgery_name": "Laparoscopic Cholecystectomy",
             "anesthesia_type": "general",
             "surgery_date": "2025-10-25T07:00:00.000Z",  # 測試datetime格式
-            "surgeon_name": "李醫師",
-            "anesthesiologist_name": "陳醫師"
+            "surgeon_name": "Dr. Smith",
+            "anesthesiologist_name": "Dr. Johnson"
         }
         
         response = requests.post(f'{BASE_URL}/anesthesia/guidelines/generate', json=data)

@@ -23,18 +23,18 @@ uvicorn app.main:app --reload
 
 The system will automatically create the following demo data:
 
-### Patient 1: 王小明 (Wang Xiao-Ming)
+### Patient 1: John Smith
 
   - Health Insurance Number: `1234567890`
-  - Name: `王小明`
+  - Name: `John Smith`
   - Date of Birth: `1985-05-15`
   - Gender: Male
   - Medical History: Penicillin allergy, Hypertension
 
-### Patient 2: 李小華 (Li Xiao-Hua)
+### Patient 2: Emily Johnson
 
   - Health Insurance Number: `0987654321`
-  - Name: `李小華`
+  - Name: `Emily Johnson`
   - Date of Birth: `1990-08-22`
   - Gender: Female
   - Medical History: No special medical history
@@ -48,7 +48,7 @@ curl -X POST "http://localhost:8000/api/v1/patients/search" \
   -H "Content-Type: application/json" \
   -d '{
     "health_insurance_number": "1234567890",
-    "full_name": "王小明",
+    "full_name": "John Smith",
     "date_of_birth": "1985-05-15"
   }'
 ```
@@ -60,11 +60,11 @@ curl -X POST "http://localhost:8000/api/v1/anesthesia/guidelines/generate" \
   -H "Content-Type: application/json" \
   -d '{
     "patient_id": 1,
-    "surgery_name": "腹腔鏡膽囊切除術",
+    "surgery_name": "Laparoscopic Cholecystectomy",
     "anesthesia_type": "general",
     "surgery_date": "2024-01-15",
-    "surgeon_name": "李醫師",
-    "anesthesiologist_name": "陳醫師"
+    "surgeon_name": "Dr. Smith",
+    "anesthesiologist_name": "Dr. Johnson"
   }'
 ```
 
