@@ -9,7 +9,7 @@ import type {
 export const guidelinesApi = {
   // Generate guideline
   generate: async (request: GuidelineGenerateRequest) => {
-    const { data } = await apiClient.post<AnesthesiaGuideline>(
+    const { data } = await apiClient.post<AnesthesiaGuideline | AnesthesiaGuideline[]>(
       '/anesthesia/guidelines/generate',
       request
     );
