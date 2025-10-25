@@ -47,7 +47,7 @@ class AnesthesiaGuideline(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     # 關聯
-    patient = relationship("Patient", back_populates="anesthesia_guidelines")
+    patient = relationship("Patient")
 
 
 class AnesthesiaGuidelineTemplate(Base):
