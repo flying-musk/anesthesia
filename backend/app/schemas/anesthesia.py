@@ -16,6 +16,13 @@ class AnesthesiaTypeEnum(str, Enum):
     SEDATION = "sedation"
 
 
+class LanguageEnum(str, Enum):
+    """語言枚舉"""
+    EN = "en"
+    ZH = "zh"
+    FR = "fr"
+
+
 class AnesthesiaGuidelineBase(BaseModel):
     """麻醉須知基礎模型"""
     surgery_name: str = Field(..., max_length=200, description="手術名稱")
@@ -23,6 +30,7 @@ class AnesthesiaGuidelineBase(BaseModel):
     surgery_date: date = Field(..., description="手術日期")
     surgeon_name: Optional[str] = Field(None, max_length=100, description="主刀醫師")
     anesthesiologist_name: Optional[str] = Field(None, max_length=100, description="麻醉醫師")
+    language: LanguageEnum = Field(..., description="語言版本")
     
     # AI 生成的須知內容
     anesthesia_type_info: str = Field(..., description="麻醉類型說明")
@@ -47,6 +55,7 @@ class AnesthesiaGuidelineCreate(BaseModel):
     surgery_date: date = Field(..., description="手術日期")
     surgeon_name: Optional[str] = Field(None, max_length=100, description="主刀醫師")
     anesthesiologist_name: Optional[str] = Field(None, max_length=100, description="麻醉醫師")
+    language: LanguageEnum = Field(..., description="語言版本")
 
 
 class AnesthesiaGuidelineUpdate(BaseModel):
@@ -56,6 +65,7 @@ class AnesthesiaGuidelineUpdate(BaseModel):
     surgery_date: Optional[date] = None
     surgeon_name: Optional[str] = Field(None, max_length=100)
     anesthesiologist_name: Optional[str] = Field(None, max_length=100)
+    language: Optional[LanguageEnum] = None
     additional_notes: Optional[str] = None
 
 
@@ -130,6 +140,7 @@ class GenerateGuidelineRequest(BaseModel):
     surgery_date: Union[date, datetime] = Field(..., description="手術日期")
     surgeon_name: Optional[str] = Field(None, max_length=100, description="主刀醫師")
     anesthesiologist_name: Optional[str] = Field(None, max_length=100, description="麻醉醫師")
+    return_language: Optional[LanguageEnum] = Field(None, description="回傳的語言版本（可選，不指定則回傳所有語言）")
     
     @validator('surgery_date')
     def validate_surgery_date(cls, v):

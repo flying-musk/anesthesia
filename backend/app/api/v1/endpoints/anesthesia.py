@@ -4,7 +4,7 @@ Anesthesia guidelines-related API endpoints
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Union
 from datetime import date
 
 from app.core.database import get_db
@@ -14,7 +14,7 @@ from app.schemas.anesthesia import (
     AnesthesiaGuidelineCreate, AnesthesiaGuidelineUpdate, AnesthesiaGuidelineResponse,
     AnesthesiaGuidelineTemplateCreate, AnesthesiaGuidelineTemplateUpdate,
     AnesthesiaGuidelineTemplateResponse, GenerateGuidelineRequest,
-    AnesthesiaGuidelineWithPatient
+    AnesthesiaGuidelineWithPatient, LanguageEnum
 )
 from app.schemas.patient import PaginatedResponse
 from app.services.anesthesia_service import AnesthesiaGuidelineService
@@ -23,9 +23,9 @@ from math import ceil
 router = APIRouter()
 
 
-@router.post("/guidelines/generate", response_model=AnesthesiaGuidelineResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/guidelines/generate", response_model=Union[AnesthesiaGuidelineResponse, List[AnesthesiaGuidelineResponse]], status_code=status.HTTP_201_CREATED)
 async def generate_guideline(request: GenerateGuidelineRequest, db: Session = Depends(get_db)):
-    """Generate anesthesia guideline"""
+    """Generate anesthesia guideline in multiple languages (always generates all 3 languages, returns requested language or all)"""
     # Check if patient exists
     print("enter generate_guideline", request.patient_id)
     patient = db.query(Patient).filter(Patient.id == request.patient_id).first()
@@ -37,8 +37,8 @@ async def generate_guideline(request: GenerateGuidelineRequest, db: Session = De
 
     try:
         service = AnesthesiaGuidelineService()
-        guideline = await service.generate_guideline(db, request)
-        return guideline
+        guidelines = await service.generate_guideline_multilingual(db, request)
+        return guidelines
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -50,17 +50,23 @@ async def generate_guideline(request: GenerateGuidelineRequest, db: Session = De
 async def get_guidelines(
     page: int = 1,
     size: int = 100,
+    language: Optional[LanguageEnum] = Query(None, description="Filter by language"),
     db: Session = Depends(get_db)
 ):
     """Get all anesthesia guidelines with pagination"""
     # Calculate offset
     skip = (page - 1) * size
 
+    # Build query
+    query = db.query(AnesthesiaGuideline)
+    if language:
+        query = query.filter(AnesthesiaGuideline.language == language.value)
+
     # Get total count
-    total = db.query(AnesthesiaGuideline).count()
+    total = query.count()
 
     # Get guidelines for current page
-    guidelines = db.query(AnesthesiaGuideline).offset(skip).limit(size).all()
+    guidelines = query.offset(skip).limit(size).all()
 
     # Calculate total pages
     pages = ceil(total / size) if size > 0 else 0
@@ -75,17 +81,36 @@ async def get_guidelines(
 
 
 @router.get("/guidelines/{guideline_id}", response_model=AnesthesiaGuidelineResponse)
-async def get_guideline(guideline_id: int, db: Session = Depends(get_db)):
+async def get_guideline(
+    guideline_id: int, 
+    language: Optional[LanguageEnum] = Query(None, description="Language preference"),
+    db: Session = Depends(get_db)
+):
     """Get specific anesthesia guideline"""
-    guideline = db.query(AnesthesiaGuideline).filter(
-        AnesthesiaGuideline.id == guideline_id
-    ).first()
-
-    if not guideline:
+    # First, get the guideline to find its group_id
+    original_guideline = db.query(AnesthesiaGuideline).filter(AnesthesiaGuideline.id == guideline_id).first()
+    
+    if not original_guideline:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Anesthesia guideline not found"
         )
+    
+    # If language is specified, find the guideline with the same group_id and language
+    if language:
+        guideline = db.query(AnesthesiaGuideline).filter(
+            AnesthesiaGuideline.group_id == original_guideline.group_id,
+            AnesthesiaGuideline.language == language.value
+        ).first()
+        
+        if not guideline:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Anesthesia guideline not found in language: {language.value}"
+            )
+    else:
+        # Return the original guideline if no language specified
+        guideline = original_guideline
 
     return guideline
 
@@ -135,7 +160,11 @@ async def delete_guideline(guideline_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/guidelines/patient/{patient_id}", response_model=List[AnesthesiaGuidelineResponse])
-async def get_patient_guidelines(patient_id: int, db: Session = Depends(get_db)):
+async def get_patient_guidelines(
+    patient_id: int, 
+    language: Optional[LanguageEnum] = Query(None, description="Filter by language"),
+    db: Session = Depends(get_db)
+):
     """Get all anesthesia guidelines for a specific patient"""
     # Check if patient exists
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
@@ -145,9 +174,12 @@ async def get_patient_guidelines(patient_id: int, db: Session = Depends(get_db))
             detail="Patient not found"
         )
     
-    guidelines = db.query(AnesthesiaGuideline).filter(
-        AnesthesiaGuideline.patient_id == patient_id
-    ).all()
+    query = db.query(AnesthesiaGuideline).filter(AnesthesiaGuideline.patient_id == patient_id)
+    
+    if language:
+        query = query.filter(AnesthesiaGuideline.language == language.value)
+    
+    guidelines = query.all()
     
     return guidelines
 
@@ -155,12 +187,16 @@ async def get_patient_guidelines(patient_id: int, db: Session = Depends(get_db))
 @router.get("/guidelines/by-date", response_model=List[AnesthesiaGuidelineResponse])
 async def get_guidelines_by_date(
     surgery_date: date = Query(..., description="Surgery date"),
+    language: Optional[LanguageEnum] = Query(None, description="Filter by language"),
     db: Session = Depends(get_db)
 ):
     """Get anesthesia guidelines by surgery date"""
-    guidelines = db.query(AnesthesiaGuideline).filter(
-        AnesthesiaGuideline.surgery_date == surgery_date
-    ).all()
+    query = db.query(AnesthesiaGuideline).filter(AnesthesiaGuideline.surgery_date == surgery_date)
+    
+    if language:
+        query = query.filter(AnesthesiaGuideline.language == language.value)
+    
+    guidelines = query.all()
 
     return guidelines
 
