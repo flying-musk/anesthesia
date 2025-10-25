@@ -9,6 +9,9 @@ import {
   FileText,
   UserPlus,
   FilePlus,
+  Video,
+  Upload,
+  Settings,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -37,6 +40,21 @@ const navigation = [
     name: 'Generate Guideline',
     href: '/guidelines/generate',
     icon: FilePlus,
+  },
+  {
+    name: 'Video Player',
+    href: '/player',
+    icon: Video,
+  },
+  {
+    name: 'Upload Content',
+    href: '/upload',
+    icon: Upload,
+  },
+  {
+    name: 'Manage Videos',
+    href: '/manage',
+    icon: Settings,
   },
 ];
 
