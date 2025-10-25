@@ -13,6 +13,8 @@ import { ArrowLeft, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import { getTranslation } from '@/lib/languages';
+import { enUS, zhCN } from 'date-fns/locale';
+
 
 export default function PatientDetailsPage({
   params,
@@ -36,6 +38,15 @@ export default function PatientDetailsPage({
       setTimeout(() => setCurrentLang(savedLang), 0);
     }
   }, []);
+
+  function formatDate(dateString: string, lang: 'en' | 'zh') {
+    const date = new Date(dateString);
+    const locale = lang === 'zh' ? zhCN : enUS;
+    
+    // 'PPP' 是 date-fns 的通用格式，会根据语言自动显示月份/日期顺序
+    return format(date, 'PPP', { locale });
+  }
+  
 
   useEffect(() => {
     // 监听语言切换事件
@@ -96,7 +107,7 @@ export default function PatientDetailsPage({
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {format(new Date(patient.date_of_birth), 'MMM dd, yyyy')}
+            {formatDate(patient.date_of_birth, currentLang)}
             </div>
           </CardContent>
         </Card>
@@ -158,7 +169,9 @@ export default function PatientDetailsPage({
                     {getTranslation(currentLang, 'patientDetails.patientInfo.dateOfBirth')}
                   </p>
                   <p className="font-medium">
-                    {format(new Date(patient.date_of_birth), 'MMMM dd, yyyy')}
+                    {/* {format(new Date(patient.date_of_birth), 'MMMM dd, yyyy')} */}
+                    {formatDate(patient.date_of_birth, currentLang)}
+
                   </p>
                 </div>
                 <div>
@@ -324,10 +337,12 @@ export default function PatientDetailsPage({
                               {guideline.surgery_name}
                             </h4>
                             <p className="text-sm text-muted-foreground">
-                              {format(
+                              {/* {format(
                                 new Date(guideline.surgery_date),
                                 'MMMM dd, yyyy'
-                              )}
+                              )} */}
+                              {formatDate(guideline.surgery_date, currentLang)}
+
                             </p>
                           </div>
                           <Badge>{guideline.anesthesia_type}</Badge>

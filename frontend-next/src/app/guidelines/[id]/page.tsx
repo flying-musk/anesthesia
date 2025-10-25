@@ -1,4 +1,3 @@
-
 'use client';
 
 import { use } from 'react';
@@ -10,21 +9,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, User, Calendar, Sparkles } from 'lucide-react';
-import { format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import { getTranslation } from '@/lib/languages';
+import { format } from 'date-fns';
+import { enUS, zhCN } from 'date-fns/locale';
 
-export default function GuidelineDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default function GuidelineDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const guidelineId = parseInt(resolvedParams.id);
 
   const { data: guideline, isLoading } = useGuideline(guidelineId);
 
-  // 方法 1：安全读取 localStorage 初始化语言
+  // -----------------------
+  // 语言切换状态
+  // -----------------------
   const [currentLang, setCurrentLang] = useState<'en' | 'zh'>(() => {
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('language');
@@ -38,11 +36,19 @@ export default function GuidelineDetailsPage({
       setCurrentLang(event.detail.language);
     };
     window.addEventListener('languageChanged', handleLanguageChange as EventListener);
-
     return () => {
       window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
     };
   }, []);
+
+  // -----------------------
+  // 格式化日期
+  // -----------------------
+  function formatDate(dateString: string, lang: 'en' | 'zh', dateFormat = 'PPP') {
+    const date = new Date(dateString);
+    const locale = lang === 'zh' ? zhCN : enUS;
+    return format(date, dateFormat, { locale });
+  }
 
   if (isLoading) {
     return (
@@ -68,6 +74,9 @@ export default function GuidelineDetailsPage({
     );
   }
 
+  // -----------------------
+  // 内容区块
+  // -----------------------
   const sections = [
     { title: getTranslation(currentLang, 'guideline.sections.anesthesiaTypeInfo'), content: guideline.anesthesia_type_info },
     { title: getTranslation(currentLang, 'guideline.sections.surgeryProcess'), content: guideline.surgery_process },
@@ -82,6 +91,7 @@ export default function GuidelineDetailsPage({
 
   return (
     <div className="space-y-6">
+      {/* 页面标题 */}
       <div className="flex items-center gap-4">
         <Link href="/guidelines">
           <Button variant="ghost" size="icon">
@@ -98,13 +108,11 @@ export default function GuidelineDetailsPage({
               </Badge>
             )}
           </div>
-          <p className="text-muted-foreground">
-            {getTranslation(currentLang, 'guideline.subtitle')}
-          </p>
+          <p className="text-muted-foreground">{getTranslation(currentLang, 'guideline.subtitle')}</p>
         </div>
       </div>
 
-      {/* Summary Card */}
+      {/* 手术信息卡片 */}
       <Card>
         <CardHeader>
           <CardTitle>{getTranslation(currentLang, 'guideline.surgeryInformation')}</CardTitle>
@@ -115,18 +123,24 @@ export default function GuidelineDetailsPage({
               <div className="flex items-start gap-3">
                 <Calendar className="mt-1 h-4 w-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">{getTranslation(currentLang, 'guideline.surgeryDate')}</p>
-                  <p className="font-medium">{format(new Date(guideline.surgery_date), 'MMMM dd, yyyy')}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {getTranslation(currentLang, 'guideline.surgeryDate')}
+                  </p>
+                  <p className="font-medium">{formatDate(guideline.surgery_date, currentLang)}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-sm font-medium text-muted-foreground">{getTranslation(currentLang, 'guideline.anesthesiaType')}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {getTranslation(currentLang, 'guideline.anesthesiaType')}
+                </p>
                 <Badge className="mt-1">{guideline.anesthesia_type}</Badge>
               </div>
 
               <div>
-                <p className="text-sm font-medium text-muted-foreground">{getTranslation(currentLang, 'guideline.surgeon')}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {getTranslation(currentLang, 'guideline.surgeon')}
+                </p>
                 <p className="font-medium">{guideline.surgeon_name}</p>
               </div>
             </div>
@@ -145,7 +159,9 @@ export default function GuidelineDetailsPage({
               )}
 
               <div>
-                <p className="text-sm font-medium text-muted-foreground">{getTranslation(currentLang, 'guideline.anesthesiologist')}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {getTranslation(currentLang, 'guideline.anesthesiologist')}
+                </p>
                 <p className="font-medium">{guideline.anesthesiologist_name}</p>
               </div>
             </div>
@@ -155,7 +171,9 @@ export default function GuidelineDetailsPage({
             <>
               <Separator className="my-4" />
               <div>
-                <p className="text-sm font-medium text-muted-foreground">{getTranslation(currentLang, 'guideline.additionalNotes')}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {getTranslation(currentLang, 'guideline.additionalNotes')}
+                </p>
                 <p className="mt-1 text-sm">{guideline.additional_notes}</p>
               </div>
             </>
@@ -163,7 +181,7 @@ export default function GuidelineDetailsPage({
         </CardContent>
       </Card>
 
-      {/* Guideline Content */}
+      {/* 指南内容区 */}
       <Card>
         <CardHeader>
           <CardTitle>{getTranslation(currentLang, 'guideline.details')}</CardTitle>
@@ -177,7 +195,7 @@ export default function GuidelineDetailsPage({
                   <div>
                     <h3 className="mb-3 text-lg font-semibold">{section.title}</h3>
                     <div className="whitespace-pre-wrap rounded-lg bg-muted/50 p-4 text-sm leading-relaxed">
-                      {section.content}
+                      {section.content} {/* 后端内容不翻译 */}
                     </div>
                   </div>
                 </div>
@@ -197,10 +215,12 @@ export default function GuidelineDetailsPage({
         <CardContent className="pt-6">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div>
-              {getTranslation(currentLang, 'guideline.createdAt')}: {format(new Date(guideline.created_at), 'PPpp')}
+              {getTranslation(currentLang, 'guideline.createdAt')}: {formatDate(guideline.created_at, currentLang, 'PPpp')}
             </div>
             {guideline.generation_notes && (
-              <div>{getTranslation(currentLang, 'guideline.generationNotes')}: {guideline.generation_notes}</div>
+              <div>
+                {getTranslation(currentLang, 'guideline.generationNotes')}: {guideline.generation_notes}
+              </div>
             )}
           </div>
         </CardContent>
@@ -208,3 +228,4 @@ export default function GuidelineDetailsPage({
     </div>
   );
 }
+
