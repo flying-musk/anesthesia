@@ -51,3 +51,14 @@ build/
 # Temporary files
 tmp/
 temp/
+
+# Data files - videos, audio, subtitles
+data/videos/
+data/audio/
+data/subtitles/
+data/documents/
+data/chroma_db_en/
+data/chroma_db_zh/
+data/*.db
+data/*.sqlite
+data/*.sqlite3
