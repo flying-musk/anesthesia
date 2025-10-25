@@ -32,9 +32,12 @@ export default function CreatePatientPage() {
     // 从localStorage获取保存的语言设置
     const savedLang = localStorage.getItem('language') as 'en' | 'zh';
     if (savedLang && (savedLang === 'en' || savedLang === 'zh')) {
-      setCurrentLang(savedLang);
+      // Use setTimeout to avoid synchronous setState
+      setTimeout(() => setCurrentLang(savedLang), 0);
     }
+  }, []);
 
+  useEffect(() => {
     // 监听语言切换事件
     const handleLanguageChange = (event: CustomEvent) => {
       setCurrentLang(event.detail.language);
@@ -74,15 +77,19 @@ export default function CreatePatientPage() {
       console.log('Submitting patient data:', cleanedData);
       const patient = await createPatient.mutateAsync(cleanedData);
       router.push(`/patients/${patient.id}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating patient:', error);
-      console.error('Error response data:', error.response?.data);
 
       // Extract error message from API response
-      if (axios.isAxiosError(error) && error.response?.data?.detail) {
-        setApiError(error.response.data.detail);
+      if (axios.isAxiosError(error)) {
+        console.error('Error response data:', error.response?.data);
+        if (error.response?.data?.detail) {
+          setApiError(error.response.data.detail);
+        } else {
+          setApiError(getTranslation(currentLang, 'createPatient.error'));
+        }
       } else {
-        setApiError('Failed to create patient. Please try again.');
+        setApiError(getTranslation(currentLang, 'createPatient.error'));
       }
     }
   };
@@ -177,7 +184,7 @@ export default function CreatePatientPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone_number">Phone Number</Label>
+                <Label htmlFor="phone_number">{getTranslation(currentLang, 'createPatient.form.phoneNumber')}</Label>
                 <Input id="phone_number" {...register('phone_number')} />
                 {errors.phone_number && (
                   <p className="text-sm text-red-500">
@@ -189,11 +196,11 @@ export default function CreatePatientPage() {
 
             <div className="border-t pt-6">
               <h3 className="mb-4 text-lg font-semibold">
-                Emergency Contact (Optional)
+                {getTranslation(currentLang, 'createPatient.emergencyContact.title')}
               </h3>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
-                  <Label htmlFor="emergency_contact_name">Name</Label>
+                  <Label htmlFor="emergency_contact_name">{getTranslation(currentLang, 'createPatient.emergencyContact.name')}</Label>
                   <Input
                     id="emergency_contact_name"
                     {...register('emergency_contact_name')}
@@ -202,7 +209,7 @@ export default function CreatePatientPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="emergency_contact_relationship">
-                    Relationship
+                    {getTranslation(currentLang, 'createPatient.emergencyContact.relationship')}
                   </Label>
                   <Input
                     id="emergency_contact_relationship"
@@ -211,7 +218,7 @@ export default function CreatePatientPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="emergency_contact_phone">Phone</Label>
+                  <Label htmlFor="emergency_contact_phone">{getTranslation(currentLang, 'createPatient.emergencyContact.phone')}</Label>
                   <Input
                     id="emergency_contact_phone"
                     {...register('emergency_contact_phone')}

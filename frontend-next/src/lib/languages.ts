@@ -92,6 +92,12 @@ export const translations = {
         female: 'Female',
         other: 'Other'
       },
+      emergencyContact: {
+        title: 'Emergency Contact (Optional)',
+        name: 'Name',
+        relationship: 'Relationship',
+        phone: 'Phone'
+      },
       buttons: {
         create: 'Create Patient',
         cancel: 'Cancel',
@@ -133,6 +139,53 @@ export const translations = {
       generating: 'Generating guideline...',
       success: 'Guideline generated successfully!',
       error: 'Failed to generate guideline. Please try again.'
+    },
+    patientDetails: {
+      title: 'Patient Details',
+      backToPatients: 'Back to Patients',
+      patientNotFound: 'Patient not found',
+      dateOfBirth: 'Date of Birth',
+      gender: 'Gender',
+      phone: 'Phone',
+      male: 'Male',
+      female: 'Female',
+      other: 'Other',
+      tabs: {
+        details: 'Details',
+        medicalHistory: 'Medical History',
+        surgeries: 'Surgeries',
+        guidelines: 'Guidelines'
+      },
+      patientInfo: {
+        title: 'Patient Information',
+        insuranceNumber: 'Insurance Number',
+        fullName: 'Full Name',
+        dateOfBirth: 'Date of Birth',
+        phoneNumber: 'Phone Number',
+        emergencyContact: 'Emergency Contact',
+        name: 'Name',
+        relationship: 'Relationship',
+        phone: 'Phone'
+      },
+      medicalHistory: {
+        title: 'Medical History',
+        allergies: 'Allergies',
+        chronicConditions: 'Chronic Conditions',
+        currentMedications: 'Current Medications',
+        previousSurgeries: 'Previous Surgeries',
+        familyHistory: 'Family History',
+        noHistory: 'No medical history available'
+      },
+      surgeries: {
+        title: 'Surgery Records',
+        surgeon: 'Surgeon',
+        anesthesiologist: 'Anesthesiologist',
+        noRecords: 'No surgery records available'
+      },
+      guidelines: {
+        title: 'Anesthesia Guidelines',
+        noGuidelines: 'No guidelines available for this patient'
+      }
     },
     common: {
       language: 'Language',
@@ -228,6 +281,12 @@ export const translations = {
         female: '女',
         other: '其他'
       },
+      emergencyContact: {
+        title: '紧急联系人（可选）',
+        name: '姓名',
+        relationship: '关系',
+        phone: '电话'
+      },
       buttons: {
         create: '创建患者',
         cancel: '取消',
@@ -270,6 +329,53 @@ export const translations = {
       success: '指南生成成功！',
       error: '生成指南失败，请重试。'
     },
+    patientDetails: {
+      title: '患者详情',
+      backToPatients: '返回患者列表',
+      patientNotFound: '未找到患者',
+      dateOfBirth: '出生日期',
+      gender: '性别',
+      phone: '电话',
+      male: '男',
+      female: '女',
+      other: '其他',
+      tabs: {
+        details: '详情',
+        medicalHistory: '病史',
+        surgeries: '手术记录',
+        guidelines: '指南'
+      },
+      patientInfo: {
+        title: '患者信息',
+        insuranceNumber: '保险号',
+        fullName: '姓名',
+        dateOfBirth: '出生日期',
+        phoneNumber: '电话号码',
+        emergencyContact: '紧急联系人',
+        name: '姓名',
+        relationship: '关系',
+        phone: '电话'
+      },
+      medicalHistory: {
+        title: '病史',
+        allergies: '过敏史',
+        chronicConditions: '慢性疾病',
+        currentMedications: '当前用药',
+        previousSurgeries: '既往手术',
+        familyHistory: '家族史',
+        noHistory: '暂无病史信息'
+      },
+      surgeries: {
+        title: '手术记录',
+        surgeon: '外科医生',
+        anesthesiologist: '麻醉师',
+        noRecords: '暂无手术记录'
+      },
+      guidelines: {
+        title: '麻醉指南',
+        noGuidelines: '该患者暂无指南'
+      }
+    },
     common: {
       language: '语言',
       switchLanguage: '切换语言',
@@ -291,11 +397,11 @@ export const translations = {
 // 获取翻译文本的函数
 export function getTranslation(locale: keyof typeof translations, key: string): string {
   const keys = key.split('.');
-  let value: any = translations[locale];
+  let value: unknown = translations[locale];
   
   for (const k of keys) {
-    value = value?.[k];
+    value = (value as Record<string, unknown>)?.[k];
   }
   
-  return value || key;
+  return (value as string) || key;
 }
