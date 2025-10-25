@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
 import { usePatient, useMedicalHistory, useSurgeryRecords } from '@/lib/hooks/use-patients';
 import { useGuidelinesByPatient } from '@/lib/hooks/use-guidelines';
@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, FileText, Calendar, Activity } from 'lucide-react';
+import { ArrowLeft, Calendar, Plus } from 'lucide-react';
 import { format } from 'date-fns';
+import { MedicalHistoryForm } from '@/components/patients/medical-history-form';
+import { SurgeryRecordForm } from '@/components/patients/surgery-record-form';
 
 export default function PatientDetailsPage({
   params,
@@ -19,6 +21,7 @@ export default function PatientDetailsPage({
 }) {
   const resolvedParams = use(params);
   const patientId = parseInt(resolvedParams.id);
+  const [showSurgeryForm, setShowSurgeryForm] = useState(false);
 
   const { data: patient, isLoading: patientLoading } = usePatient(patientId);
   const { data: medicalHistory } = useMedicalHistory(patientId);
@@ -187,51 +190,62 @@ export default function PatientDetailsPage({
               <CardTitle>Medical History</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {medicalHistory ? (
+                              {medicalHistory ? (
                 <>
-                  {medicalHistory.allergies && (
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">
-                        Allergies
-                      </p>
-                      <p className="mt-1">{medicalHistory.allergies}</p>
-                    </div>
-                  )}
-                  {medicalHistory.chronic_conditions && (
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">
-                        Chronic Conditions
-                      </p>
-                      <p className="mt-1">{medicalHistory.chronic_conditions}</p>
-                    </div>
-                  )}
-                  {medicalHistory.current_medications && (
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">
-                        Current Medications
-                      </p>
-                      <p className="mt-1">{medicalHistory.current_medications}</p>
-                    </div>
-                  )}
-                  {medicalHistory.previous_surgeries && (
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">
-                        Previous Surgeries
-                      </p>
-                      <p className="mt-1">{medicalHistory.previous_surgeries}</p>
-                    </div>
-                  )}
-                  {medicalHistory.family_history && (
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">
-                        Family History
-                      </p>
-                      <p className="mt-1">{medicalHistory.family_history}</p>
-                    </div>
-                  )}
+                  <div className="mb-4">
+                    <MedicalHistoryForm
+                      patientId={patientId}
+                      existingData={medicalHistory}
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    {medicalHistory.allergies && (
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Allergies
+                        </p>
+                        <p className="mt-1">{medicalHistory.allergies}</p>
+                      </div>
+                    )}
+                    {medicalHistory.chronic_conditions && (
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Chronic Conditions
+                        </p>
+                        <p className="mt-1">{medicalHistory.chronic_conditions}</p>
+                      </div>
+                    )}
+                    {medicalHistory.current_medications && (
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Current Medications
+                        </p>
+                        <p className="mt-1">{medicalHistory.current_medications}</p>
+                      </div>
+                    )}
+                    {medicalHistory.previous_surgeries && (
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Previous Surgeries
+                        </p>
+                        <p className="mt-1">{medicalHistory.previous_surgeries}</p>
+                      </div>
+                    )}
+                    {medicalHistory.family_history && (
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Family History
+                        </p>
+                        <p className="mt-1">{medicalHistory.family_history}</p>
+                      </div>
+                    )}
+                  </div>
                 </>
               ) : (
-                <p className="text-muted-foreground">No medical history available</p>
+                <div className="space-y-4">
+                  <p className="text-muted-foreground">No medical history available</p>
+                  <MedicalHistoryForm patientId={patientId} />
+                </div>
               )}
             </CardContent>
           </Card>
@@ -243,37 +257,54 @@ export default function PatientDetailsPage({
               <CardTitle>Surgery Records</CardTitle>
             </CardHeader>
             <CardContent>
-              {surgeryRecords && surgeryRecords.length > 0 ? (
-                <div className="space-y-4">
-                  {surgeryRecords.map((record) => (
-                    <div key={record.id} className="rounded-lg border p-4">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-semibold">{record.surgery_name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {format(new Date(record.surgery_date), 'MMMM dd, yyyy')}
-                          </p>
+              <div className="space-y-8">
+                <Button
+                  onClick={() => setShowSurgeryForm(!showSurgeryForm)}
+                  className="w-full"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Surgery Record
+                </Button>
+
+                {showSurgeryForm && (
+                  <SurgeryRecordForm
+                    patientId={patientId}
+                    onSuccess={() => setShowSurgeryForm(false)}
+                  />
+                )}
+
+                {surgeryRecords && surgeryRecords.length > 0 ? (
+                  <div className="space-y-4">
+                    {surgeryRecords.map((record) => (
+                      <div key={record.id} className="rounded-lg border p-4">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-semibold">{record.surgery_name}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {format(new Date(record.surgery_date), 'MMMM dd, yyyy')}
+                            </p>
+                          </div>
+                          <Badge>{record.surgery_type}</Badge>
                         </div>
-                        <Badge>{record.surgery_type}</Badge>
+                        <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Surgeon:</span>{' '}
+                            {record.surgeon_name}
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">
+                              Anesthesiologist:
+                            </span>{' '}
+                            {record.anesthesiologist_name}
+                          </div>
+                        </div>
                       </div>
-                      <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">Surgeon:</span>{' '}
-                          {record.surgeon_name}
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">
-                            Anesthesiologist:
-                          </span>{' '}
-                          {record.anesthesiologist_name}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-muted-foreground">No surgery records available</p>
-              )}
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground">No surgery records available</p>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
