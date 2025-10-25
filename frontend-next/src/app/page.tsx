@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePatients } from '@/lib/hooks/use-patients';
 import { useGuidelines } from '@/lib/hooks/use-guidelines';
+import { useTranslations } from '@/hooks/use-translations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,17 +13,18 @@ import { format } from 'date-fns';
 export default function DashboardPage() {
   const { data: patientsData, isLoading: patientsLoading } = usePatients(1, 5);
   const { data: guidelinesData, isLoading: guidelinesLoading } = useGuidelines(1, 5);
+  const t = useTranslations();
 
   const stats = [
     {
-      title: 'Total Patients',
+      title: t.totalPatients,
       value: patientsData?.total ?? 0,
       icon: Users,
       href: '/patients',
       color: 'text-blue-600',
     },
     {
-      title: 'Total Guidelines',
+      title: t.totalGuidelines,
       value: guidelinesData?.total ?? 0,
       icon: FileText,
       href: '/guidelines',
@@ -32,15 +34,15 @@ export default function DashboardPage() {
 
   const actions = [
     {
-      title: 'Create Patient',
-      description: 'Add a new patient to the system',
+      title: t.createPatient,
+      description: t.addNewPatient,
       icon: UserPlus,
       href: '/patients/create',
       color: 'bg-blue-500 hover:bg-blue-600',
     },
     {
-      title: 'Generate Guideline',
-      description: 'Create AI-powered anesthesia guidelines',
+      title: t.generateGuideline,
+      description: t.generateGuidelineDescription,
       icon: FilePlus,
       href: '/guidelines/generate',
       color: 'bg-green-500 hover:bg-green-600',
@@ -50,9 +52,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t.dashboard}</h1>
         <p className="text-muted-foreground">
-          Welcome to the Anesthesia Management System
+          {t.welcomeMessage}
         </p>
       </div>
 
@@ -72,7 +74,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold">{stat.value}</div>
                 <Link href={stat.href}>
                   <Button variant="link" className="px-0 text-xs">
-                    View all
+                    {t.viewAll}
                   </Button>
                 </Link>
               </CardContent>
@@ -112,7 +114,7 @@ export default function DashboardPage() {
         {/* Recent Patients */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Patients</CardTitle>
+            <CardTitle>{t.recentPatients}</CardTitle>
           </CardHeader>
           <CardContent>
             {patientsLoading ? (
@@ -145,7 +147,7 @@ export default function DashboardPage() {
         {/* Recent Guidelines */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Guidelines</CardTitle>
+            <CardTitle>{t.recentGuidelines}</CardTitle>
           </CardHeader>
           <CardContent>
             {guidelinesLoading ? (

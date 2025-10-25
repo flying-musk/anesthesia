@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreatePatient } from '@/lib/hooks/use-patients';
+import { useTranslations } from '@/hooks/use-translations';
 import { patientSchema, type PatientFormData } from '@/lib/validators/patient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ export default function CreatePatientPage() {
   const router = useRouter();
   const createPatient = useCreatePatient();
   const [apiError, setApiError] = useState<string | null>(null);
+  const t = useTranslations();
 
   const {
     register,
@@ -75,15 +77,15 @@ export default function CreatePatientPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Create Patient</h1>
-          <p className="text-muted-foreground">Add a new patient to the system</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t.createPatient}</h1>
+          <p className="text-muted-foreground">{t.addNewPatient}</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card>
           <CardHeader>
-            <CardTitle>Patient Information</CardTitle>
+            <CardTitle>{t.patientInformation}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {apiError && (
@@ -96,7 +98,7 @@ export default function CreatePatientPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="health_insurance_number">
-                  Health Insurance Number *
+                  {t.healthInsuranceNumber} *
                 </Label>
                 <Input
                   id="health_insurance_number"
@@ -110,7 +112,7 @@ export default function CreatePatientPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="full_name">Full Name *</Label>
+                <Label htmlFor="full_name">{t.fullName} *</Label>
                 <Input id="full_name" {...register('full_name')} />
                 {errors.full_name && (
                   <p className="text-sm text-red-500">
@@ -120,7 +122,7 @@ export default function CreatePatientPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="date_of_birth">Date of Birth *</Label>
+                <Label htmlFor="date_of_birth">{t.dateOfBirth} *</Label>
                 <Input
                   id="date_of_birth"
                   type="date"
@@ -134,7 +136,7 @@ export default function CreatePatientPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="gender">Gender *</Label>
+                <Label htmlFor="gender">{t.gender} *</Label>
                 <Select
                   value={selectedGender || ''}
                   onValueChange={(value) =>
@@ -142,11 +144,11 @@ export default function CreatePatientPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select gender" />
+                    <SelectValue placeholder={t.selectGender} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="M">Male</SelectItem>
-                    <SelectItem value="F">Female</SelectItem>
+                    <SelectItem value="M">{t.male}</SelectItem>
+                    <SelectItem value="F">{t.female}</SelectItem>
                     <SelectItem value="O">Other</SelectItem>
                   </SelectContent>
                 </Select>
@@ -156,7 +158,7 @@ export default function CreatePatientPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone_number">Phone Number</Label>
+                <Label htmlFor="phone_number">{t.phone}</Label>
                 <Input id="phone_number" {...register('phone_number')} />
                 {errors.phone_number && (
                   <p className="text-sm text-red-500">
@@ -168,11 +170,11 @@ export default function CreatePatientPage() {
 
             <div className="border-t pt-6">
               <h3 className="mb-4 text-lg font-semibold">
-                Emergency Contact (Optional)
+                {t.emergencyContact}
               </h3>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
-                  <Label htmlFor="emergency_contact_name">Name</Label>
+                  <Label htmlFor="emergency_contact_name">{t.emergencyContactName}</Label>
                   <Input
                     id="emergency_contact_name"
                     {...register('emergency_contact_name')}
@@ -181,7 +183,7 @@ export default function CreatePatientPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="emergency_contact_relationship">
-                    Relationship
+                    {t.emergencyContactRelationship}
                   </Label>
                   <Input
                     id="emergency_contact_relationship"
@@ -190,7 +192,7 @@ export default function CreatePatientPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="emergency_contact_phone">Phone</Label>
+                  <Label htmlFor="emergency_contact_phone">{t.emergencyContactPhone}</Label>
                   <Input
                     id="emergency_contact_phone"
                     {...register('emergency_contact_phone')}
@@ -202,14 +204,14 @@ export default function CreatePatientPage() {
             <div className="flex justify-end gap-4">
               <Link href="/patients">
                 <Button type="button" variant="outline">
-                  Cancel
+                  {t.cancel}
                 </Button>
               </Link>
               <Button type="submit" disabled={createPatient.isPending}>
                 {createPatient.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Create Patient
+                {t.create}
               </Button>
             </div>
           </CardContent>
