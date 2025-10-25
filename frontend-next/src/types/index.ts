@@ -50,6 +50,8 @@ export interface SurgeryRecord {
 export interface AnesthesiaGuideline {
   id: number;
   patient_id: number;
+  language?: string;
+  group_id?: number;
   surgery_name: string;
   anesthesia_type: string;
   surgery_date: string;
@@ -132,6 +134,7 @@ export interface GuidelineGenerateRequest {
   surgery_date: string;
   surgeon_name: string;
   anesthesiologist_name: string;
+  return_language?: 'en' | 'zh' | 'fr';
 }
 
 export interface PaginatedResponse<T> {

@@ -7,20 +7,20 @@ export const QUERY_KEYS = {
   patients: {
     all: ['patients'] as const,
     list: (page?: number) => ['patients', 'list', page] as const,
-    detail: (id: number) => ['patients', 'detail', id] as const,
+    detail: (id: number, language?: string) => ['patients', 'detail', id, language] as const,
     search: (query: string) => ['patients', 'search', query] as const,
   },
   guidelines: {
     all: ['guidelines'] as const,
     list: (page?: number) => ['guidelines', 'list', page] as const,
-    detail: (id: number) => ['guidelines', 'detail', id] as const,
-    byPatient: (patientId: number) => ['guidelines', 'patient', patientId] as const,
+    detail: (id: number, language?: string) => ['guidelines', 'detail', id, language] as const,
+    byPatient: (patientId: number, language?: string) => ['guidelines', 'patient', patientId, language] as const,
   },
   medicalHistory: {
-    byPatient: (patientId: number) => ['medical-history', patientId] as const,
+    byPatient: (patientId: number, language?: string) => ['medical-history', patientId, language] as const,
   },
   surgeryRecords: {
-    byPatient: (patientId: number) => ['surgery-records', patientId] as const,
+    byPatient: (patientId: number, language?: string) => ['surgery-records', patientId, language] as const,
   },
   templates: {
     all: ['templates'] as const,

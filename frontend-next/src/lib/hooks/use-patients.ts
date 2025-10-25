@@ -15,11 +15,13 @@ export const usePatients = (page = 1, size = 100) => {
   });
 };
 
-export const usePatient = (id: number) => {
+export const usePatient = (id: number, language?: string) => {
   return useQuery({
-    queryKey: QUERY_KEYS.patients.detail(id),
-    queryFn: () => patientsApi.getById(id),
+    queryKey: QUERY_KEYS.patients.detail(id, language),
+    queryFn: () => patientsApi.getById(id, language),
     enabled: !!id,
+    staleTime: 0, // Always consider data stale to ensure fresh fetch on language change
+    gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
 
@@ -61,12 +63,12 @@ export const useDeletePatient = () => {
 };
 
 // Medical History
-export const useMedicalHistory = (patientId: number) => {
+export const useMedicalHistory = (patientId: number, language?: string) => {
   return useQuery({
-    queryKey: QUERY_KEYS.medicalHistory.byPatient(patientId),
+    queryKey: QUERY_KEYS.medicalHistory.byPatient(patientId, language),
     queryFn: async () => {
       try {
-        return await patientsApi.getMedicalHistory(patientId);
+        return await patientsApi.getMedicalHistory(patientId, language);
       } catch (error: any) {
         // If medical history doesn't exist (404), return null instead of throwing
         if (error.response?.status === 404) {
@@ -76,6 +78,8 @@ export const useMedicalHistory = (patientId: number) => {
       }
     },
     enabled: !!patientId,
+    staleTime: 0, // Always consider data stale to ensure fresh fetch on language change
+    gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
 
@@ -124,12 +128,12 @@ export const useUpdateMedicalHistory = () => {
 };
 
 // Surgery Records
-export const useSurgeryRecords = (patientId: number) => {
+export const useSurgeryRecords = (patientId: number, language?: string) => {
   return useQuery({
-    queryKey: QUERY_KEYS.surgeryRecords.byPatient(patientId),
+    queryKey: QUERY_KEYS.surgeryRecords.byPatient(patientId, language),
     queryFn: async () => {
       try {
-        return await patientsApi.getSurgeryRecords(patientId);
+        return await patientsApi.getSurgeryRecords(patientId, language);
       } catch (error: any) {
         // If no surgery records exist (404), return empty array instead of throwing
         if (error.response?.status === 404) {
@@ -139,6 +143,8 @@ export const useSurgeryRecords = (patientId: number) => {
       }
     },
     enabled: !!patientId,
+    staleTime: 0, // Always consider data stale to ensure fresh fetch on language change
+    gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
 

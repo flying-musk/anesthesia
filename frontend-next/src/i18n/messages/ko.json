@@ -1,0 +1,4 @@
+{
+  "app": { "title": "마취 관리 시스템", "description": "AI 기반 마취 지침 생성" },
+  "nav": { "dashboard": "대시보드", "patients": "환자", "guidelines": "지침", "createPatient": "환자 생성", "generateGuideline": "지침 생성" }
+}

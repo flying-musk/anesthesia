@@ -96,11 +96,11 @@ curl -X POST "http://localhost:8000/api/v1/anesthesia/guidelines/generate" \
   -H "Content-Type: application/json" \
   -d '{
     "patient_id": 1,
-    "surgery_name": "腹腔鏡膽囊切除術",
+    "surgery_name": "Laparoscopic Cholecystectomy",
     "anesthesia_type": "general",
     "surgery_date": "2024-01-15",
-    "surgeon_name": "李醫師",
-    "anesthesiologist_name": "陳醫師"
+    "surgeon_name": "Dr. Smith",
+    "anesthesiologist_name": "Dr. Johnson"
   }'
 ```
 

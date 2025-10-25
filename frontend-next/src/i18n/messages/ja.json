@@ -1,0 +1,4 @@
+{
+  "app": { "title": "麻酔管理システム", "description": "AIによる麻酔ガイドライン生成" },
+  "nav": { "dashboard": "ダッシュボード", "patients": "患者", "guidelines": "ガイドライン", "createPatient": "患者を作成", "generateGuideline": "ガイドラインを生成" }
+}

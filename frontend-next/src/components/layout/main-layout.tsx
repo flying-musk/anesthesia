@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useTranslations } from '@/hooks/use-translations';
 import {
   LayoutDashboard,
   Users,
@@ -11,37 +12,44 @@ import {
   FilePlus,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
-
-const navigation = [
-  {
-    name: 'Dashboard',
-    href: '/',
-    icon: LayoutDashboard,
-  },
-  {
-    name: 'Patients',
-    href: '/patients',
-    icon: Users,
-  },
-  {
-    name: 'Create Patient',
-    href: '/patients/create',
-    icon: UserPlus,
-  },
-  {
-    name: 'Guidelines',
-    href: '/guidelines',
-    icon: FileText,
-  },
-  {
-    name: 'Generate Guideline',
-    href: '/guidelines/generate',
-    icon: FilePlus,
-  },
-];
+import { LanguageSwitcher } from '@/components/language-switcher';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const t = useTranslations();
+
+  const navigation = [
+    {
+      name: t.dashboard,
+      href: '/',
+      icon: LayoutDashboard,
+    },
+    {
+      name: t.patients,
+      href: '/patients',
+      icon: Users,
+    },
+    {
+      name: t.createPatient,
+      href: '/patients/create',
+      icon: UserPlus,
+    },
+    {
+      name: t.guidelines,
+      href: '/guidelines',
+      icon: FileText,
+    },
+    {
+      name: t.generateGuideline,
+      href: '/guidelines/generate',
+      icon: FilePlus,
+    },
+    {
+      name: t.languageTest,
+      href: '/test-language',
+      icon: FileText,
+    },
+  ];
 
   return (
     <div className="flex min-h-screen">
@@ -87,7 +95,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           {/* Footer */}
           <div className="border-t p-4">
             <p className="text-xs text-muted-foreground">
-              © 2025 Anesthesia System
+              {t.copyright}
             </p>
           </div>
         </div>
@@ -95,11 +103,14 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <main className="flex-1" role="main">
-        {/* Header with theme toggle */}
+        {/* Header with theme toggle and language switcher */}
         <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container mx-auto flex h-14 items-center justify-between px-6">
-            <h1 className="text-lg font-semibold">Anesthesia Management</h1>
-            <ThemeToggle />
+            <h1 className="text-lg font-semibold">{t.anesthesiaManagement}</h1>
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
           </div>
         </header>
         <div className="container mx-auto p-6">{children}</div>

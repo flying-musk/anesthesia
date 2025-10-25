@@ -1,0 +1,4 @@
+{
+  "app": { "title": "Sistema de Gestión de Anestesia", "description": "Generación de Directrices de Anestesia con IA" },
+  "nav": { "dashboard": "Tablero", "patients": "Pacientes", "guidelines": "Directrices", "createPatient": "Crear Paciente", "generateGuideline": "Generar Directriz" }
+}

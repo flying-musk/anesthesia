@@ -7,6 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { usePatients } from '@/lib/hooks/use-patients';
 import { useGenerateGuideline } from '@/lib/hooks/use-guidelines';
+import { useTranslations } from '@/hooks/use-translations';
+import { useLanguage } from '@/contexts/language-context';
 import {
   guidelineGenerateSchema,
   type GuidelineGenerateFormData,
@@ -25,13 +27,15 @@ import {
 import { ArrowLeft, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const STEPS = ['Select Patient', 'Surgery Details', 'Review'];
-
 export default function GenerateGuidelinePage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const { data: patientsData } = usePatients();
   const generateGuideline = useGenerateGuideline();
+  const t = useTranslations();
+  const { language } = useLanguage();
+
+  const STEPS = [t.selectPatient, t.surgeryDetails, t.review];
 
   const {
     register,
@@ -78,9 +82,21 @@ export default function GenerateGuidelinePage() {
       const requestData = {
         ...data,
         anesthesia_type: data.surgery_type,
+        return_language: language, // Add current language to request
       };
-      const guideline = await generateGuideline.mutateAsync(requestData);
-      router.push(`/guidelines/${guideline.id}`);
+      const guidelines = await generateGuideline.mutateAsync(requestData);
+      
+      // Handle both single guideline and array of guidelines
+      let targetGuideline;
+      if (Array.isArray(guidelines)) {
+        // If backend returns array, find the guideline in current language
+        targetGuideline = guidelines.find(g => g.language === language) || guidelines[0];
+      } else {
+        // If backend returns single guideline
+        targetGuideline = guidelines;
+      }
+      
+      router.push(`/guidelines/${targetGuideline.id}`);
     } catch (error) {
       console.error('Error generating guideline:', error);
       alert('Failed to generate guideline. Please try again.');
@@ -97,10 +113,10 @@ export default function GenerateGuidelinePage() {
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Generate Anesthesia Guideline
+            {t.generateGuideline}
           </h1>
           <p className="text-muted-foreground">
-            AI-powered guideline generation for anesthesia procedures
+            {t.generateGuidelineDescription}
           </p>
         </div>
       </div>
@@ -146,7 +162,7 @@ export default function GenerateGuidelinePage() {
             {currentStep === 0 && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="patient_id">Select Patient *</Label>
+                  <Label htmlFor="patient_id">{t.selectPatient} *</Label>
                   <Select
                     value={formData.patient_id?.toString()}
                     onValueChange={(value) =>
@@ -154,7 +170,7 @@ export default function GenerateGuidelinePage() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose a patient" />
+                      <SelectValue placeholder={t.choosePatient} />
                     </SelectTrigger>
                     <SelectContent>
                       {patientsData?.items?.map((patient) => (
@@ -173,22 +189,22 @@ export default function GenerateGuidelinePage() {
 
                 {selectedPatient && (
                   <div className="rounded-lg border p-4">
-                    <h4 className="mb-3 font-semibold">Patient Information</h4>
+                    <h4 className="mb-3 font-semibold">{t.patientInfo}</h4>
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Name:</span>{' '}
+                        <span className="text-muted-foreground">{t.name}:</span>{' '}
                         {selectedPatient.full_name}
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Gender:</span>{' '}
+                        <span className="text-muted-foreground">{t.gender}:</span>{' '}
                         {selectedPatient.gender}
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Phone:</span>{' '}
+                        <span className="text-muted-foreground">{t.phone}:</span>{' '}
                         {selectedPatient.phone_number}
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Insurance:</span>{' '}
+                        <span className="text-muted-foreground">{t.insurance}:</span>{' '}
                         {selectedPatient.health_insurance_number}
                       </div>
                     </div>
@@ -202,7 +218,7 @@ export default function GenerateGuidelinePage() {
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="surgery_name">Surgery Name *</Label>
+                    <Label htmlFor="surgery_name">{t.surgeryName} *</Label>
                     <Input id="surgery_name" {...register('surgery_name')} />
                     {errors.surgery_name && (
                       <p className="text-sm text-red-500">
@@ -212,7 +228,7 @@ export default function GenerateGuidelinePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="surgery_type">Surgery Type *</Label>
+                    <Label htmlFor="surgery_type">{t.anesthesiaType} *</Label>
                     <Select
                       value={formData.surgery_type}
                       onValueChange={(value) =>
@@ -223,13 +239,13 @@ export default function GenerateGuidelinePage() {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder={t.selectType} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="general">General</SelectItem>
-                        <SelectItem value="local">Local</SelectItem>
-                        <SelectItem value="regional">Regional</SelectItem>
-                        <SelectItem value="sedation">Sedation</SelectItem>
+                        <SelectItem value="general">{t.general}</SelectItem>
+                        <SelectItem value="local">{t.local}</SelectItem>
+                        <SelectItem value="regional">{t.regional}</SelectItem>
+                        <SelectItem value="sedation">{t.sedation}</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.surgery_type && (
@@ -240,7 +256,7 @@ export default function GenerateGuidelinePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="surgery_date">Surgery Date *</Label>
+                    <Label htmlFor="surgery_date">{t.surgeryDate} *</Label>
                     <Input
                       id="surgery_date"
                       type="date"
@@ -254,7 +270,7 @@ export default function GenerateGuidelinePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="surgeon_name">Surgeon Name *</Label>
+                    <Label htmlFor="surgeon_name">{t.surgeonName} *</Label>
                     <Input id="surgeon_name" {...register('surgeon_name')} />
                     {errors.surgeon_name && (
                       <p className="text-sm text-red-500">
@@ -265,7 +281,7 @@ export default function GenerateGuidelinePage() {
 
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="anesthesiologist_name">
-                      Anesthesiologist Name *
+                      {t.anesthesiologistName} *
                     </Label>
                     <Input
                       id="anesthesiologist_name"
@@ -285,7 +301,7 @@ export default function GenerateGuidelinePage() {
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="rounded-lg border p-4">
-                  <h4 className="mb-3 font-semibold">Patient</h4>
+                  <h4 className="mb-3 font-semibold">{t.patients}</h4>
                   <p className="text-sm">
                     {selectedPatient?.full_name} (
                     {selectedPatient?.health_insurance_number})
@@ -293,27 +309,27 @@ export default function GenerateGuidelinePage() {
                 </div>
 
                 <div className="rounded-lg border p-4">
-                  <h4 className="mb-3 font-semibold">Surgery Information</h4>
+                  <h4 className="mb-3 font-semibold">{t.surgeryInfo}</h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-muted-foreground">Surgery:</span>{' '}
+                      <span className="text-muted-foreground">{t.surgery}:</span>{' '}
                       {formData.surgery_name}
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Type:</span>{' '}
+                      <span className="text-muted-foreground">{t.type}:</span>{' '}
                       {formData.surgery_type}
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Date:</span>{' '}
+                      <span className="text-muted-foreground">{t.date}:</span>{' '}
                       {formData.surgery_date}
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Surgeon:</span>{' '}
+                      <span className="text-muted-foreground">{t.surgeonName}:</span>{' '}
                       {formData.surgeon_name}
                     </div>
                     <div className="col-span-2">
                       <span className="text-muted-foreground">
-                        Anesthesiologist:
+                        {t.anesthesiologistName}:
                       </span>{' '}
                       {formData.anesthesiologist_name}
                     </div>
@@ -325,12 +341,10 @@ export default function GenerateGuidelinePage() {
                     <Sparkles className="mt-1 h-5 w-5 text-blue-600" />
                     <div>
                       <h4 className="font-semibold text-blue-900">
-                        AI-Powered Generation
+                        {t.aiPoweredGeneration}
                       </h4>
                       <p className="text-sm text-blue-700">
-                        Our AI will generate comprehensive anesthesia guidelines
-                        based on the patient information and surgery details
-                        provided.
+                        {t.aiGenerationDescription}
                       </p>
                     </div>
                   </div>
@@ -347,12 +361,12 @@ export default function GenerateGuidelinePage() {
                 disabled={currentStep === 0}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Previous
+                {t.previous}
               </Button>
 
               {currentStep < STEPS.length - 1 ? (
                 <Button type="button" onClick={handleNext}>
-                  Next
+                  {t.next}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               ) : (
@@ -369,7 +383,7 @@ export default function GenerateGuidelinePage() {
                   ) : (
                     <>
                       <Sparkles className="mr-2 h-4 w-4" />
-                      Generate Guideline
+                      {t.generate}
                     </>
                   )}
                 </Button>

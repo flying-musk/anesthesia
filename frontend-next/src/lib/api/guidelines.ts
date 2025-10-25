@@ -9,7 +9,7 @@ import type {
 export const guidelinesApi = {
   // Generate guideline
   generate: async (request: GuidelineGenerateRequest) => {
-    const { data } = await apiClient.post<AnesthesiaGuideline>(
+    const { data } = await apiClient.post<AnesthesiaGuideline | AnesthesiaGuideline[]>(
       '/anesthesia/guidelines/generate',
       request
     );
@@ -28,9 +28,12 @@ export const guidelinesApi = {
   },
 
   // Get guideline by ID
-  getById: async (id: number) => {
+  getById: async (id: number, language?: string) => {
     const { data } = await apiClient.get<AnesthesiaGuideline>(
-      `/anesthesia/guidelines/${id}`
+      `/anesthesia/guidelines/${id}`,
+      {
+        params: language ? { language } : {},
+      }
     );
     return data;
   },
@@ -50,9 +53,12 @@ export const guidelinesApi = {
   },
 
   // Get guidelines by patient
-  getByPatient: async (patientId: number) => {
+  getByPatient: async (patientId: number, language?: string) => {
     const { data } = await apiClient.get<AnesthesiaGuideline[]>(
-      `/anesthesia/guidelines/patient/${patientId}`
+      `/anesthesia/guidelines/patient/${patientId}`,
+      {
+        params: language ? { language } : {},
+      }
     );
     return data;
   },

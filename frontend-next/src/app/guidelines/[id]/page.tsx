@@ -3,6 +3,8 @@
 import { use } from 'react';
 import Link from 'next/link';
 import { useGuideline } from '@/lib/hooks/use-guidelines';
+import { useLanguage } from '@/contexts/language-context';
+import { useTranslations } from '@/hooks/use-translations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,8 +20,10 @@ export default function GuidelineDetailsPage({
 }) {
   const resolvedParams = use(params);
   const guidelineId = parseInt(resolvedParams.id);
+  const { language } = useLanguage();
+  const t = useTranslations();
 
-  const { data: guideline, isLoading } = useGuideline(guidelineId);
+  const { data: guideline, isLoading } = useGuideline(guidelineId, language);
 
   if (isLoading) {
     return (
@@ -33,9 +37,9 @@ export default function GuidelineDetailsPage({
   if (!guideline) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-muted-foreground">Guideline not found</p>
+        <p className="text-muted-foreground">{t.guidelineNotFound}</p>
         <Link href="/guidelines">
-          <Button className="mt-4">Back to Guidelines</Button>
+          <Button className="mt-4">{t.backToGuidelines}</Button>
         </Link>
       </div>
     );
@@ -43,23 +47,23 @@ export default function GuidelineDetailsPage({
 
   const sections = [
     {
-      title: 'Anesthesia Type Information',
+      title: t.anesthesiaTypeInfo,
       content: guideline.anesthesia_type_info,
     },
-    { title: 'Surgery Process', content: guideline.surgery_process },
-    { title: 'Expected Sensations', content: guideline.expected_sensations },
-    { title: 'Potential Risks', content: guideline.potential_risks },
+    { title: t.surgeryProcess, content: guideline.surgery_process },
+    { title: t.expectedSensations, content: guideline.expected_sensations },
+    { title: t.potentialRisks, content: guideline.potential_risks },
     {
-      title: 'Pre-Surgery Instructions',
+      title: t.preSurgeryInstructions,
       content: guideline.pre_surgery_instructions,
     },
-    { title: 'Fasting Instructions', content: guideline.fasting_instructions },
+    { title: t.fastingInstructions, content: guideline.fasting_instructions },
     {
-      title: 'Medication Instructions',
+      title: t.medicationInstructions,
       content: guideline.medication_instructions,
     },
-    { title: 'Common Questions', content: guideline.common_questions },
-    { title: 'Post-Surgery Care', content: guideline.post_surgery_care },
+    { title: t.commonQuestions, content: guideline.common_questions },
+    { title: t.postSurgeryCare, content: guideline.post_surgery_care },
   ];
 
   return (
@@ -78,18 +82,18 @@ export default function GuidelineDetailsPage({
             {guideline.is_generated && (
               <Badge className="bg-gradient-to-r from-blue-600 to-purple-600">
                 <Sparkles className="mr-1 h-3 w-3" />
-                AI Generated
+                {t.aiGenerated}
               </Badge>
             )}
           </div>
-          <p className="text-muted-foreground">Anesthesia Guideline</p>
+          <p className="text-muted-foreground">{t.anesthesiaGuideline}</p>
         </div>
       </div>
 
       {/* Summary Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Surgery Information</CardTitle>
+          <CardTitle>{t.surgeryInformation}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 md:grid-cols-2">
@@ -98,7 +102,7 @@ export default function GuidelineDetailsPage({
                 <Calendar className="mt-1 h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Surgery Date
+                    {t.surgeryDate}
                   </p>
                   <p className="font-medium">
                     {format(new Date(guideline.surgery_date), 'MMMM dd, yyyy')}
@@ -108,14 +112,14 @@ export default function GuidelineDetailsPage({
 
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
-                  Anesthesia Type
+                  {t.anesthesiaType}
                 </p>
                 <Badge className="mt-1">{guideline.anesthesia_type}</Badge>
               </div>
 
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
-                  Surgeon
+                  {t.surgeon}
                 </p>
                 <p className="font-medium">{guideline.surgeon_name}</p>
               </div>
@@ -140,7 +144,7 @@ export default function GuidelineDetailsPage({
 
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
-                  Anesthesiologist
+                  {t.anesthesiologist}
                 </p>
                 <p className="font-medium">{guideline.anesthesiologist_name}</p>
               </div>
@@ -164,7 +168,7 @@ export default function GuidelineDetailsPage({
       {/* Guideline Content */}
       <Card>
         <CardHeader>
-          <CardTitle>Guideline Details</CardTitle>
+          <CardTitle>{t.guidelineDetails}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {sections.map(
@@ -186,7 +190,7 @@ export default function GuidelineDetailsPage({
 
           {sections.every((s) => !s.content) && (
             <p className="text-center text-muted-foreground">
-              No guideline content available
+              {t.noGuidelineContent}
             </p>
           )}
         </CardContent>
@@ -197,7 +201,7 @@ export default function GuidelineDetailsPage({
         <CardContent className="pt-6">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div>
-              Created: {format(new Date(guideline.created_at), 'PPpp')}
+              {t.created}: {format(new Date(guideline.created_at), 'PPpp')}
             </div>
             {guideline.generation_notes && (
               <div>Generation Notes: {guideline.generation_notes}</div>

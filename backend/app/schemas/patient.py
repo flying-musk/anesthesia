@@ -27,6 +27,16 @@ class GenderEnum(str, Enum):
     OTHER = "O"
 
 
+class LanguageEnum(str, Enum):
+    """Language enumeration."""
+    EN = "en"
+    ZH = "zh"
+    FR = "fr"
+    ES = "es"
+    JA = "ja"
+    KO = "ko"
+
+
 class PatientBase(BaseModel):
     """Base model for a patient."""
     health_insurance_number: str = Field(..., min_length=10, max_length=10, description="Health Insurance Number")
@@ -37,7 +47,7 @@ class PatientBase(BaseModel):
     emergency_contact_name: Optional[str] = Field(None, max_length=100, description="Emergency Contact Name")
     emergency_contact_relationship: Optional[str] = Field(None, max_length=50, description="Relationship")
     emergency_contact_phone: Optional[str] = Field(None, max_length=15, description="Emergency Contact Phone")
-    
+
     @validator('health_insurance_number')
     def validate_health_insurance_number(cls, v):
         if not v.isdigit():
@@ -64,7 +74,7 @@ class PatientResponse(PatientBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -77,11 +87,12 @@ class MedicalHistoryBase(BaseModel):
     previous_surgeries: Optional[str] = Field(None, description="Previous Surgeries")
     family_history: Optional[str] = Field(None, description="Family History")
     other_medical_info: Optional[str] = Field(None, description="Other Medical Information")
+    language: LanguageEnum = Field(default=LanguageEnum.EN, description="Language version")
 
 
 class MedicalHistoryCreate(MedicalHistoryBase):
     """Model for creating medical history."""
-    patient_id: int
+    pass
 
 
 class MedicalHistoryUpdate(MedicalHistoryBase):
@@ -93,9 +104,11 @@ class MedicalHistoryResponse(MedicalHistoryBase):
     """Response model for medical history."""
     id: int
     patient_id: int
+    language: LanguageEnum
+    group_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -112,11 +125,12 @@ class SurgeryRecordBase(BaseModel):
     pre_surgery_assessment: Optional[str] = Field(None, description="Pre-Surgery Assessment")
     post_surgery_notes: Optional[str] = Field(None, description="Post-Surgery Notes")
     complications: Optional[str] = Field(None, description="Complications")
+    language: LanguageEnum = Field(default=LanguageEnum.EN, description="Language version")
 
 
 class SurgeryRecordCreate(SurgeryRecordBase):
     """Model for creating a surgery record."""
-    patient_id: int
+    pass
 
 
 class SurgeryRecordUpdate(BaseModel):
@@ -137,9 +151,11 @@ class SurgeryRecordResponse(SurgeryRecordBase):
     """Response model for a surgery record."""
     id: int
     patient_id: int
+    language: LanguageEnum
+    group_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -149,7 +165,7 @@ class PatientSearchRequest(BaseModel):
     health_insurance_number: str = Field(..., min_length=10, max_length=10)
     full_name: str = Field(..., min_length=1, max_length=100)
     date_of_birth: date
-    
+
     @validator('health_insurance_number')
     def validate_health_insurance_number(cls, v):
         if not v.isdigit():
