@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { usePatients } from '@/lib/hooks/use-patients';
 import { useGenerateGuideline } from '@/lib/hooks/use-guidelines';
 import { useTranslations } from '@/hooks/use-translations';
+import { useLanguage } from '@/contexts/language-context';
 import {
   guidelineGenerateSchema,
   type GuidelineGenerateFormData,
@@ -32,6 +33,7 @@ export default function GenerateGuidelinePage() {
   const { data: patientsData } = usePatients();
   const generateGuideline = useGenerateGuideline();
   const t = useTranslations();
+  const { language } = useLanguage();
 
   const STEPS = [t.selectPatient, t.surgeryDetails, t.review];
 
@@ -80,9 +82,21 @@ export default function GenerateGuidelinePage() {
       const requestData = {
         ...data,
         anesthesia_type: data.surgery_type,
+        return_language: language, // Add current language to request
       };
-      const guideline = await generateGuideline.mutateAsync(requestData);
-      router.push(`/guidelines/${guideline.id}`);
+      const guidelines = await generateGuideline.mutateAsync(requestData);
+      
+      // Handle both single guideline and array of guidelines
+      let targetGuideline;
+      if (Array.isArray(guidelines)) {
+        // If backend returns array, find the guideline in current language
+        targetGuideline = guidelines.find(g => g.language === language) || guidelines[0];
+      } else {
+        // If backend returns single guideline
+        targetGuideline = guidelines;
+      }
+      
+      router.push(`/guidelines/${targetGuideline.id}`);
     } catch (error) {
       console.error('Error generating guideline:', error);
       alert('Failed to generate guideline. Please try again.');
