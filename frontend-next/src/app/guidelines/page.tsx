@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useGuidelines } from '@/lib/hooks/use-guidelines';
+import { useLanguage } from '@/contexts/language-context';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +14,49 @@ import { useState } from 'react';
 
 export default function GuidelinesPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const { language } = useLanguage();
   const { data, isLoading } = useGuidelines();
+
+  const translations = {
+    en: {
+      title: 'Anesthesia Guidelines',
+      subtitle: 'View and manage generated anesthesia guidelines',
+      generateButton: 'Generate Guideline',
+      searchPlaceholder: 'Search by surgery name or anesthesia type...',
+      date: 'Date',
+      surgeon: 'Surgeon',
+      anesthesiologist: 'Anesthesiologist',
+      view: 'View',
+      noGuidelines: 'No guidelines found',
+      generateFirst: 'Generate your first guideline',
+    },
+    zh: {
+      title: '麻醉指南',
+      subtitle: '查看和管理生成的麻醉指南',
+      generateButton: '生成指南',
+      searchPlaceholder: '按手術名稱或麻醉類型搜索...',
+      date: '日期',
+      surgeon: '外科醫生',
+      anesthesiologist: '麻醉師',
+      view: '查看',
+      noGuidelines: '未找到指南',
+      generateFirst: '生成您的第一個指南',
+    },
+    fr: {
+      title: 'Directives d\'Anesthésie',
+      subtitle: 'Voir et gérer les directives d\'anesthésie générées',
+      generateButton: 'Générer une Directive',
+      searchPlaceholder: 'Rechercher par nom de chirurgie ou type d\'anesthésie...',
+      date: 'Date',
+      surgeon: 'Chirurgien',
+      anesthesiologist: 'Anesthésiste',
+      view: 'Voir',
+      noGuidelines: 'Aucune directive trouvée',
+      generateFirst: 'Générer votre première directive',
+    },
+  };
+
+  const t = translations[language];
 
   const filteredGuidelines = data?.items?.filter(
     (guideline) =>
@@ -26,16 +69,16 @@ export default function GuidelinesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Anesthesia Guidelines
+            {t.title}
           </h1>
           <p className="text-muted-foreground">
-            View and manage generated anesthesia guidelines
+            {t.subtitle}
           </p>
         </div>
         <Link href="/guidelines/generate">
           <Button>
             <FilePlus className="mr-2 h-4 w-4" />
-            Generate Guideline
+            {t.generateButton}
           </Button>
         </Link>
       </div>
@@ -45,7 +88,7 @@ export default function GuidelinesPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search by surgery name or anesthesia type..."
+              placeholder={t.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -78,15 +121,15 @@ export default function GuidelinesPage() {
                     </div>
                     <div className="mt-2 flex gap-6 text-sm text-muted-foreground">
                       <div>
-                        <span className="font-medium">Date:</span>{' '}
+                        <span className="font-medium">{t.date}:</span>{' '}
                         {format(new Date(guideline.surgery_date), 'MMM dd, yyyy')}
                       </div>
                       <div>
-                        <span className="font-medium">Surgeon:</span>{' '}
+                        <span className="font-medium">{t.surgeon}:</span>{' '}
                         {guideline.surgeon_name}
                       </div>
                       <div>
-                        <span className="font-medium">Anesthesiologist:</span>{' '}
+                        <span className="font-medium">{t.anesthesiologist}:</span>{' '}
                         {guideline.anesthesiologist_name}
                       </div>
                     </div>
@@ -94,7 +137,7 @@ export default function GuidelinesPage() {
                   <Link href={`/guidelines/${guideline.id}`}>
                     <Button variant="ghost" size="sm">
                       <Eye className="mr-2 h-4 w-4" />
-                      View
+                      {t.view}
                     </Button>
                   </Link>
                 </div>
@@ -102,11 +145,11 @@ export default function GuidelinesPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <p className="text-muted-foreground">No guidelines found</p>
+              <p className="text-muted-foreground">{t.noGuidelines}</p>
               <Link href="/guidelines/generate">
                 <Button className="mt-4" variant="outline">
                   <FilePlus className="mr-2 h-4 w-4" />
-                  Generate your first guideline
+                  {t.generateFirst}
                 </Button>
               </Link>
             </div>
