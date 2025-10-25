@@ -13,8 +13,8 @@ export const QUERY_KEYS = {
   guidelines: {
     all: ['guidelines'] as const,
     list: (page?: number) => ['guidelines', 'list', page] as const,
-    detail: (id: number) => ['guidelines', 'detail', id] as const,
-    byPatient: (patientId: number) => ['guidelines', 'patient', patientId] as const,
+    detail: (id: number, language?: string) => ['guidelines', 'detail', id, language] as const,
+    byPatient: (patientId: number, language?: string) => ['guidelines', 'patient', patientId, language] as const,
   },
   medicalHistory: {
     byPatient: (patientId: number) => ['medical-history', patientId] as const,

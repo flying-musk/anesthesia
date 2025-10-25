@@ -3,6 +3,7 @@
 import { use } from 'react';
 import Link from 'next/link';
 import { useGuideline } from '@/lib/hooks/use-guidelines';
+import { useLanguage } from '@/contexts/language-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,8 +19,9 @@ export default function GuidelineDetailsPage({
 }) {
   const resolvedParams = use(params);
   const guidelineId = parseInt(resolvedParams.id);
+  const { language } = useLanguage();
 
-  const { data: guideline, isLoading } = useGuideline(guidelineId);
+  const { data: guideline, isLoading } = useGuideline(guidelineId, language);
 
   if (isLoading) {
     return (

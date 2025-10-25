@@ -11,18 +11,18 @@ export const useGuidelines = (page = 1, size = 100) => {
   });
 };
 
-export const useGuideline = (id: number) => {
+export const useGuideline = (id: number, language?: string) => {
   return useQuery({
-    queryKey: QUERY_KEYS.guidelines.detail(id),
-    queryFn: () => guidelinesApi.getById(id),
+    queryKey: QUERY_KEYS.guidelines.detail(id, language),
+    queryFn: () => guidelinesApi.getById(id, language),
     enabled: !!id,
   });
 };
 
-export const useGuidelinesByPatient = (patientId: number) => {
+export const useGuidelinesByPatient = (patientId: number, language?: string) => {
   return useQuery({
-    queryKey: QUERY_KEYS.guidelines.byPatient(patientId),
-    queryFn: () => guidelinesApi.getByPatient(patientId),
+    queryKey: QUERY_KEYS.guidelines.byPatient(patientId, language),
+    queryFn: () => guidelinesApi.getByPatient(patientId, language),
     enabled: !!patientId,
   });
 };

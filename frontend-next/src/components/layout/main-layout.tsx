@@ -11,6 +11,7 @@ import {
   FilePlus,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { LanguageSwitcher } from '@/components/language-switcher';
 
 const navigation = [
   {
@@ -37,6 +38,11 @@ const navigation = [
     name: 'Generate Guideline',
     href: '/guidelines/generate',
     icon: FilePlus,
+  },
+  {
+    name: 'Language Test',
+    href: '/test-language',
+    icon: FileText,
   },
 ];
 
@@ -95,11 +101,14 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <main className="flex-1" role="main">
-        {/* Header with theme toggle */}
+        {/* Header with theme toggle and language switcher */}
         <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container mx-auto flex h-14 items-center justify-between px-6">
             <h1 className="text-lg font-semibold">Anesthesia Management</h1>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
           </div>
         </header>
         <div className="container mx-auto p-6">{children}</div>
