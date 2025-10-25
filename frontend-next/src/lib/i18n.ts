@@ -36,12 +36,81 @@ export const translations = {
     
     // Buttons
     backToGuidelines: 'Back to Guidelines',
-    view: 'View',
-    generate: 'Generate',
     
     // Status
     guidelineNotFound: 'Guideline not found',
     noGuidelineContent: 'No guideline content available',
+    
+    // Dashboard
+    welcomeMessage: 'Welcome to the Anesthesia Management System',
+    totalPatients: 'Total Patients',
+    totalGuidelines: 'Total Guidelines',
+    viewAll: 'View all',
+    recentPatients: 'Recent Patients',
+    recentGuidelines: 'Recent Guidelines',
+    
+    // Patients
+    managePatients: 'Manage patient information and records',
+    searchPlaceholder: 'Search by name or insurance number...',
+    insuranceNumber: 'Insurance Number',
+    fullName: 'Full Name',
+    dateOfBirth: 'Date of Birth',
+    gender: 'Gender',
+    phone: 'Phone',
+    actions: 'Actions',
+    view: 'View',
+    edit: 'Edit',
+    delete: 'Delete',
+    male: 'Male',
+    female: 'Female',
+    
+    // Create Patient
+    addNewPatient: 'Add a new patient to the system',
+    patientInformation: 'Patient Information',
+    healthInsuranceNumber: 'Health Insurance Number',
+    dateOfBirthPlaceholder: 'dd/mm/yyyy',
+    selectGender: 'Select gender',
+    emergencyContact: 'Emergency Contact (Optional)',
+    emergencyContactName: 'Emergency Contact Name',
+    emergencyContactRelationship: 'Relationship',
+    emergencyContactPhone: 'Emergency Contact Phone',
+    cancel: 'Cancel',
+    create: 'Create',
+    
+    // Generate Guideline
+    generateGuidelineDescription: 'AI-powered guideline generation for anesthesia procedures',
+    selectPatient: 'Select Patient',
+    surgeryDetails: 'Surgery Details',
+    review: 'Review',
+    choosePatient: 'Choose a patient',
+    surgeryName: 'Surgery Name',
+    surgeonName: 'Surgeon Name',
+    anesthesiologistName: 'Anesthesiologist Name',
+    selectType: 'Select type',
+    previous: 'Previous',
+    next: 'Next',
+    generate: 'Generate',
+    
+    // Patient Information Display
+    patientInfo: 'Patient Information',
+    name: 'Name',
+    insurance: 'Insurance',
+    
+    // Surgery Information Display
+    surgeryInfo: 'Surgery Information',
+    surgery: 'Surgery',
+    type: 'Type',
+    date: 'Date',
+    
+    // Anesthesia Types
+    general: 'General',
+    local: 'Local',
+    regional: 'Regional',
+    sedation: 'Sedation',
+    
+    // AI Generation
+    aiPoweredGeneration: 'AI-Powered Generation',
+    aiGenerationDescription: 'Our AI will generate comprehensive anesthesia guidelines based on the patient information and surgery details provided.',
   },
   zh: {
     // Navigation
@@ -78,12 +147,81 @@ export const translations = {
     
     // Buttons
     backToGuidelines: '返回指南',
-    view: '查看',
-    generate: '生成',
     
     // Status
     guidelineNotFound: '未找到指南',
     noGuidelineContent: '無可用指南內容',
+    
+    // Dashboard
+    welcomeMessage: '歡迎使用麻醉管理系統',
+    totalPatients: '總患者數',
+    totalGuidelines: '總指南數',
+    viewAll: '查看全部',
+    recentPatients: '最近患者',
+    recentGuidelines: '最近指南',
+    
+    // Patients
+    managePatients: '管理患者信息和記錄',
+    searchPlaceholder: '按姓名或保險號搜索...',
+    insuranceNumber: '保險號',
+    fullName: '姓名',
+    dateOfBirth: '出生日期',
+    gender: '性別',
+    phone: '電話',
+    actions: '操作',
+    view: '查看',
+    edit: '編輯',
+    delete: '刪除',
+    male: '男性',
+    female: '女性',
+    
+    // Create Patient
+    addNewPatient: '向系統添加新患者',
+    patientInformation: '患者信息',
+    healthInsuranceNumber: '健康保險號',
+    dateOfBirthPlaceholder: '日/月/年',
+    selectGender: '選擇性別',
+    emergencyContact: '緊急聯繫人（可選）',
+    emergencyContactName: '緊急聯繫人姓名',
+    emergencyContactRelationship: '關係',
+    emergencyContactPhone: '緊急聯繫人電話',
+    cancel: '取消',
+    create: '創建',
+    
+    // Generate Guideline
+    generateGuidelineDescription: 'AI 驅動的麻醉程序指南生成',
+    selectPatient: '選擇患者',
+    surgeryDetails: '手術詳情',
+    review: '審查',
+    choosePatient: '選擇患者',
+    surgeryName: '手術名稱',
+    surgeonName: '外科醫生姓名',
+    anesthesiologistName: '麻醉師姓名',
+    selectType: '選擇類型',
+    previous: '上一步',
+    next: '下一步',
+    generate: '生成',
+    
+    // Patient Information Display
+    patientInfo: '患者信息',
+    name: '姓名',
+    insurance: '保險',
+    
+    // Surgery Information Display
+    surgeryInfo: '手術信息',
+    surgery: '手術',
+    type: '類型',
+    date: '日期',
+    
+    // Anesthesia Types
+    general: '全身麻醉',
+    local: '局部麻醉',
+    regional: '區域麻醉',
+    sedation: '鎮靜麻醉',
+    
+    // AI Generation
+    aiPoweredGeneration: 'AI 驅動生成',
+    aiGenerationDescription: '我們的 AI 將根據提供的患者信息和手術詳情生成全面的麻醉指南。',
   },
   fr: {
     // Navigation
@@ -120,12 +258,81 @@ export const translations = {
     
     // Buttons
     backToGuidelines: 'Retour aux Directives',
-    view: 'Voir',
-    generate: 'Générer',
     
     // Status
     guidelineNotFound: 'Directive non trouvée',
     noGuidelineContent: 'Aucun contenu de directive disponible',
+    
+    // Dashboard
+    welcomeMessage: 'Bienvenue dans le Système de Gestion d\'Anesthésie',
+    totalPatients: 'Total des Patients',
+    totalGuidelines: 'Total des Directives',
+    viewAll: 'Voir tout',
+    recentPatients: 'Patients Récents',
+    recentGuidelines: 'Directives Récentes',
+    
+    // Patients
+    managePatients: 'Gérer les informations et dossiers des patients',
+    searchPlaceholder: 'Rechercher par nom ou numéro d\'assurance...',
+    insuranceNumber: 'Numéro d\'Assurance',
+    fullName: 'Nom Complet',
+    dateOfBirth: 'Date de Naissance',
+    gender: 'Sexe',
+    phone: 'Téléphone',
+    actions: 'Actions',
+    view: 'Voir',
+    edit: 'Modifier',
+    delete: 'Supprimer',
+    male: 'Homme',
+    female: 'Femme',
+    
+    // Create Patient
+    addNewPatient: 'Ajouter un nouveau patient au système',
+    patientInformation: 'Informations du Patient',
+    healthInsuranceNumber: 'Numéro d\'Assurance Maladie',
+    dateOfBirthPlaceholder: 'jj/mm/aaaa',
+    selectGender: 'Sélectionner le sexe',
+    emergencyContact: 'Contact d\'Urgence (Optionnel)',
+    emergencyContactName: 'Nom du Contact d\'Urgence',
+    emergencyContactRelationship: 'Relation',
+    emergencyContactPhone: 'Téléphone du Contact d\'Urgence',
+    cancel: 'Annuler',
+    create: 'Créer',
+    
+    // Generate Guideline
+    generateGuidelineDescription: 'Génération de directives d\'anesthésie alimentée par IA',
+    selectPatient: 'Sélectionner un Patient',
+    surgeryDetails: 'Détails de la Chirurgie',
+    review: 'Révision',
+    choosePatient: 'Choisir un patient',
+    surgeryName: 'Nom de la Chirurgie',
+    surgeonName: 'Nom du Chirurgien',
+    anesthesiologistName: 'Nom de l\'Anesthésiste',
+    selectType: 'Sélectionner le type',
+    previous: 'Précédent',
+    next: 'Suivant',
+    generate: 'Générer',
+    
+    // Patient Information Display
+    patientInfo: 'Informations du Patient',
+    name: 'Nom',
+    insurance: 'Assurance',
+    
+    // Surgery Information Display
+    surgeryInfo: 'Informations sur la Chirurgie',
+    surgery: 'Chirurgie',
+    type: 'Type',
+    date: 'Date',
+    
+    // Anesthesia Types
+    general: 'Général',
+    local: 'Local',
+    regional: 'Régional',
+    sedation: 'Sédation',
+    
+    // AI Generation
+    aiPoweredGeneration: 'Génération Alimentée par IA',
+    aiGenerationDescription: 'Notre IA générera des directives d\'anesthésie complètes basées sur les informations du patient et les détails de la chirurgie fournis.',
   },
 };
 

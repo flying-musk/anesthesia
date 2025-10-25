@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePatients } from '@/lib/hooks/use-patients';
+import { useTranslations } from '@/hooks/use-translations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,7 @@ import { useState } from 'react';
 export default function PatientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const { data, isLoading } = usePatients();
+  const t = useTranslations();
 
   const filteredPatients = data?.items?.filter(
     (patient) =>
@@ -34,15 +36,15 @@ export default function PatientsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Patients</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t.patients}</h1>
           <p className="text-muted-foreground">
-            Manage patient information and records
+            {t.managePatients}
           </p>
         </div>
         <Link href="/patients/create">
           <Button>
             <UserPlus className="mr-2 h-4 w-4" />
-            Create Patient
+            {t.createPatient}
           </Button>
         </Link>
       </div>
@@ -53,7 +55,7 @@ export default function PatientsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search by name or insurance number..."
+                placeholder={t.searchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -72,12 +74,12 @@ export default function PatientsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Insurance Number</TableHead>
-                  <TableHead>Full Name</TableHead>
-                  <TableHead>Date of Birth</TableHead>
-                  <TableHead>Gender</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t.insuranceNumber}</TableHead>
+                  <TableHead>{t.fullName}</TableHead>
+                  <TableHead>{t.dateOfBirth}</TableHead>
+                  <TableHead>{t.gender}</TableHead>
+                  <TableHead>{t.phone}</TableHead>
+                  <TableHead className="text-right">{t.actions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -92,9 +94,9 @@ export default function PatientsPage() {
                     </TableCell>
                     <TableCell>
                       {patient.gender === 'M'
-                        ? 'Male'
+                        ? t.male
                         : patient.gender === 'F'
-                        ? 'Female'
+                        ? t.female
                         : 'Other'}
                     </TableCell>
                     <TableCell>{patient.phone_number}</TableCell>
@@ -102,7 +104,7 @@ export default function PatientsPage() {
                       <Link href={`/patients/${patient.id}`}>
                         <Button variant="ghost" size="sm">
                           <Eye className="mr-2 h-4 w-4" />
-                          View
+                          {t.view}
                         </Button>
                       </Link>
                     </TableCell>
