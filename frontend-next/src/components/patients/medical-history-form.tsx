@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { useCreateMedicalHistory, useUpdateMedicalHistory } from '@/lib/hooks/use-patients';
+import { useLanguage } from '@/contexts/language-context';
 import { medicalHistorySchema } from '@/lib/validators/patient';
 import type { MedicalHistoryFormData } from '@/lib/validators/patient';
 
@@ -20,6 +21,7 @@ interface MedicalHistoryFormProps {
 
 export function MedicalHistoryForm({ patientId, existingData, onSuccess }: MedicalHistoryFormProps) {
   const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const { language } = useLanguage();
   
   const createMutation = useCreateMedicalHistory();
   const updateMutation = useUpdateMedicalHistory();
@@ -38,11 +40,12 @@ export function MedicalHistoryForm({ patientId, existingData, onSuccess }: Medic
 
   const onSubmit = async (data: MedicalHistoryFormData) => {
     try {
+      const dataWithLanguage = { ...data, language };
       if (existingData) {
-        await updateMutation.mutateAsync({ patientId, data });
+        await updateMutation.mutateAsync({ patientId, data: dataWithLanguage });
         setStatus({ type: 'success', message: 'Medical history updated successfully' });
       } else {
-        await createMutation.mutateAsync({ patientId, data });
+        await createMutation.mutateAsync({ patientId, data: dataWithLanguage });
         setStatus({ type: 'success', message: 'Medical history created successfully' });
         form.reset(); // Reset form after successful creation
       }

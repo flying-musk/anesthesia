@@ -94,7 +94,8 @@ export const useCreateMedicalHistory = () => {
       patientId: number;
       data: MedicalHistoryCreate;
     }) => patientsApi.createMedicalHistory(patientId, data),
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
+      // Invalidate all language-specific queries for this patient
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.medicalHistory.byPatient(variables.patientId),
       });
@@ -159,7 +160,8 @@ export const useCreateSurgeryRecord = () => {
       patientId: number;
       data: SurgeryRecordCreate;
     }) => patientsApi.createSurgeryRecord(patientId, data),
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
+      // Invalidate all language-specific queries for this patient
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.surgeryRecords.byPatient(variables.patientId),
       });

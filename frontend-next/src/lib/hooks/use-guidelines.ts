@@ -37,9 +37,13 @@ export const useGenerateGuideline = () => {
       guidelinesApi.generate(request),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.guidelines.all });
-      queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.guidelines.byPatient(data.patient_id),
-      });
+      // Handle both single guideline and array of guidelines
+      const patientId = Array.isArray(data) ? data[0]?.patient_id : data?.patient_id;
+      if (patientId) {
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.guidelines.byPatient(patientId),
+        });
+      }
     },
   });
 };

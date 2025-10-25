@@ -24,6 +24,7 @@ export const medicalHistorySchema = z.object({
   previous_surgeries: z.string().optional(),
   family_history: z.string().optional(),
   other_medical_info: z.string().optional(),
+  language: z.string().optional(),
 });
 
 export const surgeryRecordSchema = z.object({
@@ -39,6 +40,7 @@ export const surgeryRecordSchema = z.object({
   pre_surgery_assessment: z.string().optional(),
   post_surgery_notes: z.string().optional(),
   complications: z.string().optional(),
+  language: z.string().optional(),
 });
 
 export type PatientFormData = z.infer<typeof patientSchema>;

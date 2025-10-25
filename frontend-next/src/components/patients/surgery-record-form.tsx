@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { useCreateSurgeryRecord } from '@/lib/hooks/use-patients';
+import { useLanguage } from '@/contexts/language-context';
 import { surgeryRecordSchema } from '@/lib/validators/patient';
 import type { SurgeryRecordFormData } from '@/lib/validators/patient';
 
@@ -19,6 +20,7 @@ interface SurgeryRecordFormProps {
 
 export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormProps) {
   const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const { language } = useLanguage();
   
   const createMutation = useCreateSurgeryRecord();
   
@@ -40,7 +42,8 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
 
   const onSubmit = async (data: SurgeryRecordFormData) => {
     try {
-      await createMutation.mutateAsync({ patientId, data });
+      const dataWithLanguage = { ...data, language };
+      await createMutation.mutateAsync({ patientId, data: dataWithLanguage });
       setStatus({ type: 'success', message: 'Surgery record created successfully' });
       form.reset(); // Reset form after successful creation
       onSuccess?.();

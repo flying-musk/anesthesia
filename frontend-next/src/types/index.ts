@@ -19,6 +19,8 @@ export interface Patient {
 export interface MedicalHistory {
   id: number;
   patient_id: number;
+  language: string;
+  group_id?: number;
   allergies?: string;
   chronic_conditions?: string;
   current_medications?: string;
@@ -32,6 +34,8 @@ export interface MedicalHistory {
 export interface SurgeryRecord {
   id: number;
   patient_id: number;
+  language: string;
+  group_id?: number;
   surgery_name: string;
   surgery_type: 'general' | 'local' | 'regional' | 'sedation';
   surgery_date: string;
@@ -111,6 +115,7 @@ export interface MedicalHistoryCreate {
   previous_surgeries?: string;
   family_history?: string;
   other_medical_info?: string;
+  language?: string;
 }
 
 export interface SurgeryRecordCreate {
@@ -124,6 +129,7 @@ export interface SurgeryRecordCreate {
   pre_surgery_assessment?: string;
   post_surgery_notes?: string;
   complications?: string;
+  language?: string;
 }
 
 export interface GuidelineGenerateRequest {

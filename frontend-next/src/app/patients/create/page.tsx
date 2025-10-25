@@ -55,9 +55,9 @@ export default function CreatePatientPage() {
       console.log('Submitting patient data:', cleanedData);
       const patient = await createPatient.mutateAsync(cleanedData);
       router.push(`/patients/${patient.id}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating patient:', error);
-      console.error('Error response data:', error.response?.data);
+      console.error('Error response data:', (error as any).response?.data);
 
       // Extract error message from API response
       if (axios.isAxiosError(error) && error.response?.data?.detail) {

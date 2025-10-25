@@ -65,7 +65,7 @@ export const patientsApi = {
   },
 
   createMedicalHistory: async (patientId: number, history: MedicalHistoryCreate) => {
-    const { data } = await apiClient.post<MedicalHistory>(
+    const { data } = await apiClient.post<MedicalHistory[]>(
       `/patients/${patientId}/medical-history`,
       history
     );
@@ -92,7 +92,7 @@ export const patientsApi = {
   },
 
   createSurgeryRecord: async (patientId: number, record: SurgeryRecordCreate) => {
-    const { data } = await apiClient.post<SurgeryRecord>(
+    const { data } = await apiClient.post<SurgeryRecord[]>(
       `/patients/${patientId}/surgery-records`,
       record
     );
