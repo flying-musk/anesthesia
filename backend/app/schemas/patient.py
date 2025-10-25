@@ -27,6 +27,13 @@ class GenderEnum(str, Enum):
     OTHER = "O"
 
 
+class LanguageEnum(str, Enum):
+    """Language enumeration."""
+    EN = "en"
+    ZH = "zh"
+    FR = "fr"
+
+
 class PatientBase(BaseModel):
     """Base model for a patient."""
     health_insurance_number: str = Field(..., min_length=10, max_length=10, description="Health Insurance Number")
@@ -77,11 +84,12 @@ class MedicalHistoryBase(BaseModel):
     previous_surgeries: Optional[str] = Field(None, description="Previous Surgeries")
     family_history: Optional[str] = Field(None, description="Family History")
     other_medical_info: Optional[str] = Field(None, description="Other Medical Information")
+    language: LanguageEnum = Field(default=LanguageEnum.EN, description="Language version")
 
 
 class MedicalHistoryCreate(MedicalHistoryBase):
     """Model for creating medical history."""
-    patient_id: int
+    pass
 
 
 class MedicalHistoryUpdate(MedicalHistoryBase):
@@ -93,6 +101,8 @@ class MedicalHistoryResponse(MedicalHistoryBase):
     """Response model for medical history."""
     id: int
     patient_id: int
+    language: LanguageEnum
+    group_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
     
@@ -112,11 +122,12 @@ class SurgeryRecordBase(BaseModel):
     pre_surgery_assessment: Optional[str] = Field(None, description="Pre-Surgery Assessment")
     post_surgery_notes: Optional[str] = Field(None, description="Post-Surgery Notes")
     complications: Optional[str] = Field(None, description="Complications")
+    language: LanguageEnum = Field(default=LanguageEnum.EN, description="Language version")
 
 
 class SurgeryRecordCreate(SurgeryRecordBase):
     """Model for creating a surgery record."""
-    patient_id: int
+    pass
 
 
 class SurgeryRecordUpdate(BaseModel):
@@ -137,6 +148,8 @@ class SurgeryRecordResponse(SurgeryRecordBase):
     """Response model for a surgery record."""
     id: int
     patient_id: int
+    language: LanguageEnum
+    group_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
     
