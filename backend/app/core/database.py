@@ -1,5 +1,5 @@
 """
-資料庫設定和連接管理
+Database configuration and connection management
 """
 
 from sqlalchemy import create_engine
@@ -7,8 +7,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
-# 建立資料庫引擎
-# SQLite 不需要連接池設定
+# Create database engine
+# SQLite does not need connection pool settings
 if settings.DATABASE_URL.startswith("sqlite"):
     engine = create_engine(
         settings.DATABASE_URL,
@@ -23,15 +23,15 @@ else:
         echo=settings.DEBUG
     )
 
-# 建立 SessionLocal 類別
+# Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# 建立 Base 類別
+# Create Base class
 Base = declarative_base()
 
 
 def get_db():
-    """取得資料庫會話"""
+    """Get database session"""
     db = SessionLocal()
     try:
         yield db
@@ -40,6 +40,6 @@ def get_db():
 
 
 async def init_db():
-    """初始化資料庫"""
-    # 建立所有表格
+    """Initialize database"""
+    # Create all tables
     Base.metadata.create_all(bind=engine)
