@@ -10,9 +10,55 @@ import {
   FileText,
   UserPlus,
   FilePlus,
+  Video,
+  Upload,
+  Settings,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
+
+const navigation = [
+  {
+    name: 'Dashboard',
+    href: '/',
+    icon: LayoutDashboard,
+  },
+  {
+    name: 'Patients',
+    href: '/patients',
+    icon: Users,
+  },
+  {
+    name: 'Create Patient',
+    href: '/patients/create',
+    icon: UserPlus,
+  },
+  {
+    name: 'Guidelines',
+    href: '/guidelines',
+    icon: FileText,
+  },
+  {
+    name: 'Generate Guideline',
+    href: '/guidelines/generate',
+    icon: FilePlus,
+  },
+  {
+    name: 'Video Player',
+    href: '/player',
+    icon: Video,
+  },
+  {
+    name: 'Upload Content',
+    href: '/upload',
+    icon: Upload,
+  },
+  {
+    name: 'Manage Videos',
+    href: '/manage',
+    icon: Settings,
+  },
+];
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -43,6 +89,21 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       name: t.generateGuideline,
       href: '/guidelines/generate',
       icon: FilePlus,
+    },
+    {
+      name: 'Video Player',
+      href: '/player',
+      icon: Video,
+    },
+    {
+      name: 'Upload Content',
+      href: '/upload',
+      icon: Upload,
+    },
+    {
+      name: 'Manage Videos',
+      href: '/manage',
+      icon: Settings,
     },
     {
       name: t.languageTest,

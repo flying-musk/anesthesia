@@ -10,3 +10,13 @@ httpx==0.25.2
 requests==2.31.0
 loguru==0.7.2
 pydantic-core==2.14.1
+
+# RAG and AI dependencies
+langchain==0.1.0
+langchain-community==0.0.13
+chromadb==0.4.22
+ollama==0.1.6
+
+# Translation and TTS (optional)
+gtts==2.5.0
+pydub==0.25.1
