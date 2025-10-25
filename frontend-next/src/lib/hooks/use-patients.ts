@@ -20,7 +20,7 @@ export const usePatient = (id: number, language?: string) => {
     queryKey: QUERY_KEYS.patients.detail(id, language),
     queryFn: () => patientsApi.getById(id, language),
     enabled: !!id,
-    staleTime: 0, // Always consider data stale to ensure fresh fetch on language change
+    staleTime: 30 * 1000, // Consider data stale after 30 seconds
     gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
@@ -78,7 +78,7 @@ export const useMedicalHistory = (patientId: number, language?: string) => {
       }
     },
     enabled: !!patientId,
-    staleTime: 0, // Always consider data stale to ensure fresh fetch on language change
+    staleTime: 30 * 1000, // Consider data stale after 30 seconds
     gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
@@ -144,7 +144,7 @@ export const useSurgeryRecords = (patientId: number, language?: string) => {
       }
     },
     enabled: !!patientId,
-    staleTime: 0, // Always consider data stale to ensure fresh fetch on language change
+    staleTime: 30 * 1000, // Consider data stale after 30 seconds
     gcTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };

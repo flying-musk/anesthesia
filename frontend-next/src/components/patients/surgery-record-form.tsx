@@ -8,8 +8,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCreateSurgeryRecord } from '@/lib/hooks/use-patients';
 import { useLanguage } from '@/contexts/language-context';
+import { useTranslations } from '@/hooks/use-translations';
 import { surgeryRecordSchema } from '@/lib/validators/patient';
 import type { SurgeryRecordFormData } from '@/lib/validators/patient';
 
@@ -21,6 +23,7 @@ interface SurgeryRecordFormProps {
 export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormProps) {
   const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { language } = useLanguage();
+  const t = useTranslations();
   
   const createMutation = useCreateSurgeryRecord();
   
@@ -74,9 +77,9 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="surgery_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Surgery Name</FormLabel>
+              <FormLabel>{t.surgeryName}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter surgery name" {...field} />
+                <Input placeholder={t.surgeryName} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -87,10 +90,20 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="surgery_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Surgery Type</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter surgery type (e.g., general, local)" {...field} />
-              </FormControl>
+              <FormLabel>{t.surgeryType}</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t.selectSurgeryType} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="general">{t.generalAnesthesia}</SelectItem>
+                  <SelectItem value="local">{t.localAnesthesia}</SelectItem>
+                  <SelectItem value="regional">{t.regionalAnesthesia}</SelectItem>
+                  <SelectItem value="sedation">{t.sedationAnesthesia}</SelectItem>
+                </SelectContent>
+              </Select>
             </FormItem>
           )}
         />
@@ -100,7 +113,7 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="surgery_date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Surgery Date</FormLabel>
+              <FormLabel>{t.surgeryDate}</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
@@ -113,9 +126,9 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="surgeon_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Surgeon Name</FormLabel>
+              <FormLabel>{t.surgeon}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter surgeon name" {...field} />
+                <Input placeholder={t.surgeon} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -126,9 +139,9 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="anesthesiologist_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Anesthesiologist Name</FormLabel>
+              <FormLabel>{t.anesthesiologist}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter anesthesiologist name" {...field} />
+                <Input placeholder={t.anesthesiologist} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -140,7 +153,7 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
             name="surgery_duration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Surgery Duration (minutes)</FormLabel>
+                <FormLabel>{t.surgeryDuration}</FormLabel>
                 <FormControl>
                   <Input 
                     type="number" 
@@ -158,7 +171,7 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
             name="anesthesia_duration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Anesthesia Duration (minutes)</FormLabel>
+                <FormLabel>{t.anesthesiaDuration}</FormLabel>
                 <FormControl>
                   <Input 
                     type="number"
@@ -177,9 +190,9 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="pre_surgery_assessment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Pre-Surgery Assessment</FormLabel>
+              <FormLabel>{t.preSurgeryAssessment}</FormLabel>
               <FormControl>
-                <Textarea placeholder="Enter pre-surgery assessment notes..." {...field} />
+                <Textarea placeholder={t.preSurgeryAssessment} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -190,9 +203,9 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="post_surgery_notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Post-Surgery Notes</FormLabel>
+              <FormLabel>{t.postSurgeryNotes}</FormLabel>
               <FormControl>
-                <Textarea placeholder="Enter post-surgery notes..." {...field} />
+                <Textarea placeholder={t.postSurgeryNotes} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -203,9 +216,9 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           name="complications"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Complications</FormLabel>
+              <FormLabel>{t.complications}</FormLabel>
               <FormControl>
-                <Textarea placeholder="List any complications..." {...field} />
+                <Textarea placeholder={t.complications} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -216,7 +229,7 @@ export function SurgeryRecordForm({ patientId, onSuccess }: SurgeryRecordFormPro
           className="w-full"
           disabled={createMutation.isPending}
         >
-          {createMutation.isPending ? 'Creating...' : 'Create Surgery Record'}
+          {createMutation.isPending ? t.saving : t.createSurgeryRecord}
         </Button>
       </form>
     </Form>

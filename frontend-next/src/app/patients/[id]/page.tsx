@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Calendar, Plus } from 'lucide-react';
+import { ArrowLeft, Calendar, Plus, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { MedicalHistoryForm } from '@/components/patients/medical-history-form';
 import { SurgeryRecordForm } from '@/components/patients/surgery-record-form';
@@ -24,6 +24,7 @@ export default function PatientDetailsPage({
   const resolvedParams = use(params);
   const patientId = parseInt(resolvedParams.id);
   const [showSurgeryForm, setShowSurgeryForm] = useState(false);
+  const [showMedicalHistoryForm, setShowMedicalHistoryForm] = useState(false);
   const t = useTranslations();
   const { language } = useLanguage();
 
@@ -190,65 +191,90 @@ export default function PatientDetailsPage({
 
         <TabsContent value="medical-history">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>{t.medicalHistory}</CardTitle>
+              {medicalHistory && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowMedicalHistoryForm(!showMedicalHistoryForm)}
+                >
+                  <Edit className="mr-2 h-4 w-4" />
+                  {showMedicalHistoryForm ? t.cancel : t.edit}
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="space-y-4">
               {medicalHistory ? (
                 <>
-                  <div className="mb-4">
-                    <MedicalHistoryForm
-                      patientId={patientId}
-                      existingData={medicalHistory}
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    {medicalHistory.allergies && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {t.allergies}
-                        </p>
-                        <p className="mt-1">{medicalHistory.allergies}</p>
-                      </div>
-                    )}
-                    {medicalHistory.chronic_conditions && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {t.chronicConditions}
-                        </p>
-                        <p className="mt-1">{medicalHistory.chronic_conditions}</p>
-                      </div>
-                    )}
-                    {medicalHistory.current_medications && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {t.currentMedications}
-                        </p>
-                        <p className="mt-1">{medicalHistory.current_medications}</p>
-                      </div>
-                    )}
-                    {medicalHistory.previous_surgeries && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {t.previousSurgeries}
-                        </p>
-                        <p className="mt-1">{medicalHistory.previous_surgeries}</p>
-                      </div>
-                    )}
-                    {medicalHistory.family_history && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {t.familyHistory}
-                        </p>
-                        <p className="mt-1">{medicalHistory.family_history}</p>
-                      </div>
-                    )}
-                  </div>
+                  {showMedicalHistoryForm ? (
+                    <div className="mb-4">
+                      <MedicalHistoryForm
+                        patientId={patientId}
+                        existingData={medicalHistory}
+                        onSuccess={() => setShowMedicalHistoryForm(false)}
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {medicalHistory.allergies && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {t.allergies}
+                          </p>
+                          <p className="mt-1">{medicalHistory.allergies}</p>
+                        </div>
+                      )}
+                      {medicalHistory.chronic_conditions && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {t.chronicConditions}
+                          </p>
+                          <p className="mt-1">{medicalHistory.chronic_conditions}</p>
+                        </div>
+                      )}
+                      {medicalHistory.current_medications && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {t.currentMedications}
+                          </p>
+                          <p className="mt-1">{medicalHistory.current_medications}</p>
+                        </div>
+                      )}
+                      {medicalHistory.previous_surgeries && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {t.previousSurgeries}
+                          </p>
+                          <p className="mt-1">{medicalHistory.previous_surgeries}</p>
+                        </div>
+                      )}
+                      {medicalHistory.family_history && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {t.familyHistory}
+                          </p>
+                          <p className="mt-1">{medicalHistory.family_history}</p>
+                        </div>
+                      )}
+                      {medicalHistory.other_medical_info && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {t.otherMedicalInfo}
+                          </p>
+                          <p className="mt-1">{medicalHistory.other_medical_info}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="space-y-4">
                   <p className="text-muted-foreground">{t.noMedicalHistory}</p>
-                  <MedicalHistoryForm patientId={patientId} />
+                  <MedicalHistoryForm 
+                    patientId={patientId} 
+                    onSuccess={() => setShowMedicalHistoryForm(false)}
+                  />
                 </div>
               )}
             </CardContent>
@@ -262,19 +288,33 @@ export default function PatientDetailsPage({
             </CardHeader>
             <CardContent>
               <div className="space-y-8">
-                <Button
-                  onClick={() => setShowSurgeryForm(!showSurgeryForm)}
-                  className="w-full"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t.addSurgeryRecord}
-                </Button>
+                {!showSurgeryForm && (
+                  <Button
+                    onClick={() => setShowSurgeryForm(true)}
+                    className="w-full"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    {t.addSurgeryRecord}
+                  </Button>
+                )}
 
                 {showSurgeryForm && (
-                  <SurgeryRecordForm
-                    patientId={patientId}
-                    onSuccess={() => setShowSurgeryForm(false)}
-                  />
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-semibold">{t.addSurgeryRecord}</h3>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowSurgeryForm(false)}
+                      >
+                        {t.cancel}
+                      </Button>
+                    </div>
+                    <SurgeryRecordForm
+                      patientId={patientId}
+                      onSuccess={() => setShowSurgeryForm(false)}
+                      key={`surgery-form-${showSurgeryForm}`}
+                    />
+                  </div>
                 )}
 
                 {surgeryRecords && surgeryRecords.length > 0 ? (
