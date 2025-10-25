@@ -111,6 +111,26 @@ export const translations = {
     // AI Generation
     aiPoweredGeneration: 'AI-Powered Generation',
     aiGenerationDescription: 'Our AI will generate comprehensive anesthesia guidelines based on the patient information and surgery details provided.',
+    
+    // Patient Details Page
+    patientNotFound: 'Patient not found',
+    backToPatients: 'Back to Patients',
+    details: 'Details',
+    medicalHistory: 'Medical History',
+    surgeries: 'Surgeries',
+    phoneNumber: 'Phone Number',
+    relationship: 'Relationship',
+    notAvailable: 'N/A',
+    allergies: 'Allergies',
+    chronicConditions: 'Chronic Conditions',
+    currentMedications: 'Current Medications',
+    previousSurgeries: 'Previous Surgeries',
+    familyHistory: 'Family History',
+    noMedicalHistory: 'No medical history available',
+    surgeryRecords: 'Surgery Records',
+    noSurgeryRecords: 'No surgery records available',
+    noGuidelinesAvailable: 'No guidelines available for this patient',
+    other: 'Other',
   },
   zh: {
     // Navigation
@@ -222,6 +242,26 @@ export const translations = {
     // AI Generation
     aiPoweredGeneration: 'AI 驅動生成',
     aiGenerationDescription: '我們的 AI 將根據提供的患者信息和手術詳情生成全面的麻醉指南。',
+    
+    // Patient Details Page
+    patientNotFound: '未找到患者',
+    backToPatients: '返回患者列表',
+    details: '詳情',
+    medicalHistory: '醫療病史',
+    surgeries: '手術',
+    phoneNumber: '電話號碼',
+    relationship: '關係',
+    notAvailable: '無',
+    allergies: '過敏',
+    chronicConditions: '慢性疾病',
+    currentMedications: '目前用藥',
+    previousSurgeries: '既往手術',
+    familyHistory: '家族病史',
+    noMedicalHistory: '無醫療病史',
+    surgeryRecords: '手術記錄',
+    noSurgeryRecords: '無手術記錄',
+    noGuidelinesAvailable: '該患者無可用指南',
+    other: '其他',
   },
   fr: {
     // Navigation
@@ -333,6 +373,26 @@ export const translations = {
     // AI Generation
     aiPoweredGeneration: 'Génération Alimentée par IA',
     aiGenerationDescription: 'Notre IA générera des directives d\'anesthésie complètes basées sur les informations du patient et les détails de la chirurgie fournis.',
+    
+    // Patient Details Page
+    patientNotFound: 'Patient non trouvé',
+    backToPatients: 'Retour aux Patients',
+    details: 'Détails',
+    medicalHistory: 'Antécédents Médicaux',
+    surgeries: 'Chirurgies',
+    phoneNumber: 'Numéro de Téléphone',
+    relationship: 'Relation',
+    notAvailable: 'N/A',
+    allergies: 'Allergies',
+    chronicConditions: 'Affections Chroniques',
+    currentMedications: 'Médicaments Actuels',
+    previousSurgeries: 'Chirurgies Précédentes',
+    familyHistory: 'Antécédents Familiaux',
+    noMedicalHistory: 'Aucun antécédent médical disponible',
+    surgeryRecords: 'Dossiers de Chirurgie',
+    noSurgeryRecords: 'Aucun dossier de chirurgie disponible',
+    noGuidelinesAvailable: 'Aucune directive disponible pour ce patient',
+    other: 'Autre',
   },
 };
 

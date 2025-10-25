@@ -4,6 +4,8 @@ import { use } from 'react';
 import Link from 'next/link';
 import { usePatient, useMedicalHistory, useSurgeryRecords } from '@/lib/hooks/use-patients';
 import { useGuidelinesByPatient } from '@/lib/hooks/use-guidelines';
+import { useTranslations } from '@/hooks/use-translations';
+import { useLanguage } from '@/contexts/language-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,11 +21,13 @@ export default function PatientDetailsPage({
 }) {
   const resolvedParams = use(params);
   const patientId = parseInt(resolvedParams.id);
+  const t = useTranslations();
+  const { language } = useLanguage();
 
-  const { data: patient, isLoading: patientLoading } = usePatient(patientId);
-  const { data: medicalHistory } = useMedicalHistory(patientId);
-  const { data: surgeryRecords } = useSurgeryRecords(patientId);
-  const { data: guidelines } = useGuidelinesByPatient(patientId);
+  const { data: patient, isLoading: patientLoading } = usePatient(patientId, language);
+  const { data: medicalHistory } = useMedicalHistory(patientId, language);
+  const { data: surgeryRecords } = useSurgeryRecords(patientId, language);
+  const { data: guidelines } = useGuidelinesByPatient(patientId, language);
 
   if (patientLoading) {
     return (
@@ -37,9 +41,9 @@ export default function PatientDetailsPage({
   if (!patient) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-muted-foreground">Patient not found</p>
+        <p className="text-muted-foreground">{t.patientNotFound}</p>
         <Link href="/patients">
-          <Button className="mt-4">Back to Patients</Button>
+          <Button className="mt-4">{t.backToPatients}</Button>
         </Link>
       </div>
     );
@@ -66,7 +70,7 @@ export default function PatientDetailsPage({
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Date of Birth</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.dateOfBirth}</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -78,22 +82,22 @@ export default function PatientDetailsPage({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Gender</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.gender}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {patient.gender === 'M'
-                ? 'Male'
+                ? t.male
                 : patient.gender === 'F'
-                ? 'Female'
-                : 'Other'}
+                ? t.female
+                : t.other}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Phone</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.phone}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{patient.phone_number}</div>
@@ -103,34 +107,34 @@ export default function PatientDetailsPage({
 
       <Tabs defaultValue="details" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="medical-history">Medical History</TabsTrigger>
-          <TabsTrigger value="surgeries">Surgeries</TabsTrigger>
-          <TabsTrigger value="guidelines">Guidelines</TabsTrigger>
+          <TabsTrigger value="details">{t.details}</TabsTrigger>
+          <TabsTrigger value="medical-history">{t.medicalHistory}</TabsTrigger>
+          <TabsTrigger value="surgeries">{t.surgeries}</TabsTrigger>
+          <TabsTrigger value="guidelines">{t.guidelines}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="details" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Patient Information</CardTitle>
+              <CardTitle>{t.patientInformation}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Insurance Number
+                    {t.insuranceNumber}
                   </p>
                   <p className="font-medium">{patient.health_insurance_number}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Full Name
+                    {t.fullName}
                   </p>
                   <p className="font-medium">{patient.full_name}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Date of Birth
+                    {t.dateOfBirth}
                   </p>
                   <p className="font-medium">
                     {format(new Date(patient.date_of_birth), 'MMMM dd, yyyy')}
@@ -138,7 +142,7 @@ export default function PatientDetailsPage({
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Phone Number
+                    {t.phoneNumber}
                   </p>
                   <p className="font-medium">{patient.phone_number}</p>
                 </div>
@@ -147,11 +151,11 @@ export default function PatientDetailsPage({
               {patient.emergency_contact_name && (
                 <>
                   <div className="border-t pt-4">
-                    <h3 className="mb-3 font-semibold">Emergency Contact</h3>
+                    <h3 className="mb-3 font-semibold">{t.emergencyContact}</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                          Name
+                          {t.name}
                         </p>
                         <p className="font-medium">
                           {patient.emergency_contact_name}
@@ -159,18 +163,18 @@ export default function PatientDetailsPage({
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                          Relationship
+                          {t.relationship}
                         </p>
                         <p className="font-medium">
-                          {patient.emergency_contact_relationship || 'N/A'}
+                          {patient.emergency_contact_relationship || t.notAvailable}
                         </p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                          Phone
+                          {t.phone}
                         </p>
                         <p className="font-medium">
-                          {patient.emergency_contact_phone || 'N/A'}
+                          {patient.emergency_contact_phone || t.notAvailable}
                         </p>
                       </div>
                     </div>
@@ -184,7 +188,7 @@ export default function PatientDetailsPage({
         <TabsContent value="medical-history">
           <Card>
             <CardHeader>
-              <CardTitle>Medical History</CardTitle>
+              <CardTitle>{t.medicalHistory}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {medicalHistory ? (
@@ -192,7 +196,7 @@ export default function PatientDetailsPage({
                   {medicalHistory.allergies && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">
-                        Allergies
+                        {t.allergies}
                       </p>
                       <p className="mt-1">{medicalHistory.allergies}</p>
                     </div>
@@ -200,7 +204,7 @@ export default function PatientDetailsPage({
                   {medicalHistory.chronic_conditions && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">
-                        Chronic Conditions
+                        {t.chronicConditions}
                       </p>
                       <p className="mt-1">{medicalHistory.chronic_conditions}</p>
                     </div>
@@ -208,7 +212,7 @@ export default function PatientDetailsPage({
                   {medicalHistory.current_medications && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">
-                        Current Medications
+                        {t.currentMedications}
                       </p>
                       <p className="mt-1">{medicalHistory.current_medications}</p>
                     </div>
@@ -216,7 +220,7 @@ export default function PatientDetailsPage({
                   {medicalHistory.previous_surgeries && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">
-                        Previous Surgeries
+                        {t.previousSurgeries}
                       </p>
                       <p className="mt-1">{medicalHistory.previous_surgeries}</p>
                     </div>
@@ -224,14 +228,14 @@ export default function PatientDetailsPage({
                   {medicalHistory.family_history && (
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">
-                        Family History
+                        {t.familyHistory}
                       </p>
                       <p className="mt-1">{medicalHistory.family_history}</p>
                     </div>
                   )}
                 </>
               ) : (
-                <p className="text-muted-foreground">No medical history available</p>
+                <p className="text-muted-foreground">{t.noMedicalHistory}</p>
               )}
             </CardContent>
           </Card>
@@ -240,7 +244,7 @@ export default function PatientDetailsPage({
         <TabsContent value="surgeries">
           <Card>
             <CardHeader>
-              <CardTitle>Surgery Records</CardTitle>
+              <CardTitle>{t.surgeryRecords}</CardTitle>
             </CardHeader>
             <CardContent>
               {surgeryRecords && surgeryRecords.length > 0 ? (
@@ -258,12 +262,12 @@ export default function PatientDetailsPage({
                       </div>
                       <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
                         <div>
-                          <span className="text-muted-foreground">Surgeon:</span>{' '}
+                          <span className="text-muted-foreground">{t.surgeon}:</span>{' '}
                           {record.surgeon_name}
                         </div>
                         <div>
                           <span className="text-muted-foreground">
-                            Anesthesiologist:
+                            {t.anesthesiologist}:
                           </span>{' '}
                           {record.anesthesiologist_name}
                         </div>
@@ -272,7 +276,7 @@ export default function PatientDetailsPage({
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground">No surgery records available</p>
+                <p className="text-muted-foreground">{t.noSurgeryRecords}</p>
               )}
             </CardContent>
           </Card>
@@ -281,7 +285,7 @@ export default function PatientDetailsPage({
         <TabsContent value="guidelines">
           <Card>
             <CardHeader>
-              <CardTitle>Anesthesia Guidelines</CardTitle>
+              <CardTitle>{t.anesthesiaGuidelines}</CardTitle>
             </CardHeader>
             <CardContent>
               {guidelines && guidelines.length > 0 ? (
@@ -313,7 +317,7 @@ export default function PatientDetailsPage({
                 </div>
               ) : (
                 <p className="text-muted-foreground">
-                  No guidelines available for this patient
+                  {t.noGuidelinesAvailable}
                 </p>
               )}
             </CardContent>
