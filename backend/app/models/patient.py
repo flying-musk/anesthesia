@@ -31,7 +31,7 @@ class Patient(Base):
     # 關聯
     medical_history = relationship("MedicalHistory", back_populates="patient", uselist=False)
     surgery_records = relationship("SurgeryRecord", back_populates="patient")
-    anesthesia_guidelines = relationship("AnesthesiaGuideline", back_populates="patient")
+    # anesthesia_guidelines = relationship("AnesthesiaGuideline", back_populates="patient")
 
 
 class MedicalHistory(Base):
